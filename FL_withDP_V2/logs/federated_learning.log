@@ -1,0 +1,988 @@
+2025-02-26 17:30:12,958 - Main - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-02-26 17:30:12,959 - Main - INFO - Number of CPUs: 8
+2025-02-26 17:30:12,959 - Main - INFO - Torch CUDA available: False
+2025-02-26 17:30:12,959 - Main - INFO - Federated Learning with Differential Privacy enabled
+2025-02-26 17:30:12,959 - Main - INFO - Starting server process...
+2025-02-26 17:30:12,966 - Main - INFO - Waiting for server to initialize...
+2025-02-26 17:30:17,970 - Main - INFO - Starting 3 client processes...
+2025-02-26 17:30:17,970 - Main - INFO - Starting client 0 process...
+2025-02-26 17:30:18,983 - Main - INFO - Starting client 1 process...
+2025-02-26 17:30:19,995 - Main - INFO - Starting client 2 process...
+2025-02-26 17:30:21,011 - Main - INFO - All processes started. Waiting for completion...
+2025-02-26 17:30:21,011 - Main - INFO - Waiting for Server process to complete...
+2025-02-26 17:30:23,318 - DataLoader - INFO - Total dataset size: 10943
+2025-02-26 17:30:23,319 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-02-26 17:30:23,330 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-02-26 17:30:23,330 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-02-26 17:30:23,330 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-02-26 17:30:23,333 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-02-26 17:30:23,333 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-02-26 17:30:23,333 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-02-26 17:30:23,337 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-02-26 17:30:23,337 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-02-26 17:30:23,337 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-02-26 17:30:23,338 - Server - INFO - Server-side evaluation - Combined test set size: 2190
+2025-02-26 17:30:23,338 - Server - INFO - Server initialized with differential privacy support
+2025-02-26 17:30:23,338 - Server - INFO - Starting Flower server...
+2025-02-26 17:30:23,338 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-02-26 17:30:23,340 - flwr - INFO - Starting Flower server, config: num_rounds=2, no round_timeout
+2025-02-26 17:30:23,379 - flwr - INFO - Flower ECE: gRPC server running (2 rounds), SSL is disabled
+2025-02-26 17:30:23,379 - flwr - INFO - [INIT]
+2025-02-26 17:30:23,379 - flwr - INFO - Requesting initial parameters from one random client
+2025-02-26 17:30:30,440 - DataLoader - INFO - Total dataset size: 10943
+2025-02-26 17:30:30,440 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-02-26 17:30:30,447 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-02-26 17:30:30,447 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-02-26 17:30:30,447 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-02-26 17:30:30,450 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-02-26 17:30:30,450 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-02-26 17:30:30,450 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-02-26 17:30:30,453 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-02-26 17:30:30,453 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-02-26 17:30:30,453 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-02-26 17:30:30,453 - Client_0 - INFO - Client 0 - Starting with 2917 training samples, 730 testing samples
+2025-02-26 17:30:30,983 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,983 - opacus.validators.module_validator - INFO - Replaced sub_module bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:30,984 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,984 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:30,984 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,984 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:30,984 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,985 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:30,985 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,985 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:30,986 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,986 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:30,986 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,987 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:30,987 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,987 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.downsample.1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:30,987 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,988 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:30,988 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,988 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:30,988 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,989 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:30,989 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,989 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:30,989 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,990 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.downsample.1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:30,990 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,990 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:30,990 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,990 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:30,991 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,991 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:30,991 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,992 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:30,992 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,992 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.downsample.1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:30,993 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,993 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:30,993 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:30,994 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:31,698 - DataLoader - INFO - Total dataset size: 10943
+2025-02-26 17:30:31,698 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-02-26 17:30:31,705 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-02-26 17:30:31,705 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-02-26 17:30:31,705 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-02-26 17:30:31,708 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-02-26 17:30:31,708 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-02-26 17:30:31,708 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-02-26 17:30:31,710 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-02-26 17:30:31,711 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-02-26 17:30:31,711 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-02-26 17:30:31,711 - Client_1 - INFO - Client 1 - Starting with 2918 training samples, 730 testing samples
+2025-02-26 17:30:32,181 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,182 - opacus.validators.module_validator - INFO - Replaced sub_module bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:32,182 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,182 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:32,182 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,183 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:32,183 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,183 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:32,183 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,184 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:32,184 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,184 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:32,184 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,185 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:32,185 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,185 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.downsample.1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:32,185 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,185 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:32,186 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,186 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:32,186 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,186 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:32,186 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,187 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:32,187 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,187 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.downsample.1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:32,187 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,188 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:32,188 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,188 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:32,188 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,189 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:32,189 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,189 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:32,190 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,190 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.downsample.1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:32,190 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,191 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:32,191 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:32,191 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:32,840 - DataLoader - INFO - Total dataset size: 10943
+2025-02-26 17:30:32,840 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-02-26 17:30:32,844 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-02-26 17:30:32,844 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-02-26 17:30:32,844 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-02-26 17:30:32,847 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-02-26 17:30:32,848 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-02-26 17:30:32,848 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-02-26 17:30:32,850 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-02-26 17:30:32,850 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-02-26 17:30:32,851 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-02-26 17:30:32,851 - Client_2 - INFO - Client 2 - Starting with 2918 training samples, 730 testing samples
+2025-02-26 17:30:33,297 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,298 - opacus.validators.module_validator - INFO - Replaced sub_module bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:33,298 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,299 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:33,299 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,299 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:33,300 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,300 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:33,300 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,300 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:30:33,300 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,301 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:33,301 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,301 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:33,301 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,301 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.downsample.1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:33,302 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,302 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:33,302 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,303 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:30:33,303 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,303 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:33,303 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,304 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:33,304 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,304 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.downsample.1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:33,304 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,304 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:33,305 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,305 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:30:33,305 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,305 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:33,305 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,306 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:33,306 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,306 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.downsample.1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:33,306 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,306 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:30:33,307 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:30:33,307 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:34:52,874 - Main - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-02-26 17:34:52,874 - Main - INFO - Number of CPUs: 8
+2025-02-26 17:34:52,874 - Main - INFO - Torch CUDA available: False
+2025-02-26 17:34:52,874 - Main - INFO - Federated Learning with Differential Privacy enabled
+2025-02-26 17:34:52,874 - Main - INFO - Starting server process...
+2025-02-26 17:34:52,885 - Main - INFO - Waiting for server to initialize...
+2025-02-26 17:34:57,896 - Main - INFO - Starting 3 client processes...
+2025-02-26 17:34:57,896 - Main - INFO - Starting client 0 process...
+2025-02-26 17:34:58,906 - Main - INFO - Starting client 1 process...
+2025-02-26 17:34:59,917 - Main - INFO - Starting client 2 process...
+2025-02-26 17:35:00,936 - Main - INFO - All processes started. Waiting for completion...
+2025-02-26 17:35:00,936 - Main - INFO - Waiting for Server process to complete...
+2025-02-26 17:35:05,626 - DataLoader - INFO - Total dataset size: 10943
+2025-02-26 17:35:05,626 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-02-26 17:35:05,638 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-02-26 17:35:05,639 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-02-26 17:35:05,639 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-02-26 17:35:05,642 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-02-26 17:35:05,642 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-02-26 17:35:05,642 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-02-26 17:35:05,646 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-02-26 17:35:05,646 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-02-26 17:35:05,646 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-02-26 17:35:05,647 - Server - INFO - Server-side evaluation - Combined test set size: 2190
+2025-02-26 17:35:05,647 - Server - INFO - Server initialized with differential privacy support
+2025-02-26 17:35:05,647 - Server - INFO - Starting Flower server...
+2025-02-26 17:35:05,647 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-02-26 17:35:05,649 - flwr - INFO - Starting Flower server, config: num_rounds=2, no round_timeout
+2025-02-26 17:35:05,691 - flwr - INFO - Flower ECE: gRPC server running (2 rounds), SSL is disabled
+2025-02-26 17:35:05,691 - flwr - INFO - [INIT]
+2025-02-26 17:35:05,691 - flwr - INFO - Requesting initial parameters from one random client
+2025-02-26 17:35:11,406 - DataLoader - INFO - Total dataset size: 10943
+2025-02-26 17:35:11,406 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-02-26 17:35:11,411 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-02-26 17:35:11,411 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-02-26 17:35:11,412 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-02-26 17:35:11,414 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-02-26 17:35:11,414 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-02-26 17:35:11,414 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-02-26 17:35:11,417 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-02-26 17:35:11,417 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-02-26 17:35:11,417 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-02-26 17:35:11,417 - Client_0 - INFO - Client 0 - Starting with 2917 training samples, 730 testing samples
+2025-02-26 17:35:12,036 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,037 - opacus.validators.module_validator - INFO - Replaced sub_module bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:12,037 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,038 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:12,038 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,038 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:12,038 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,039 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:12,039 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,040 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:12,040 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,040 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:12,041 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,041 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:12,041 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,042 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.downsample.1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:12,042 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,043 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:12,043 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,044 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:12,044 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,044 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:12,045 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,045 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:12,045 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,046 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.downsample.1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:12,046 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,047 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:12,047 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,047 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:12,048 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,048 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:12,048 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,049 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:12,049 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,049 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.downsample.1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:12,050 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,050 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:12,050 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:12,051 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:12,806 - DataLoader - INFO - Total dataset size: 10943
+2025-02-26 17:35:12,806 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-02-26 17:35:12,814 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-02-26 17:35:12,814 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-02-26 17:35:12,815 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-02-26 17:35:12,818 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-02-26 17:35:12,818 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-02-26 17:35:12,818 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-02-26 17:35:12,822 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-02-26 17:35:12,822 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-02-26 17:35:12,822 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-02-26 17:35:12,822 - Client_1 - INFO - Client 1 - Starting with 2918 training samples, 730 testing samples
+2025-02-26 17:35:13,354 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,355 - opacus.validators.module_validator - INFO - Replaced sub_module bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:13,355 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,355 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:13,356 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,356 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:13,356 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,356 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:13,357 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,357 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:13,357 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,357 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:13,357 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,358 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:13,358 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,358 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.downsample.1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:13,359 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,359 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:13,359 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,359 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:13,359 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,360 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:13,360 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,360 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:13,361 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,361 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.downsample.1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:13,361 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,361 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:13,362 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,362 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:13,362 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,362 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:13,363 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,363 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:13,363 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,363 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.downsample.1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:13,363 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,365 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:13,365 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:13,366 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:14,036 - DataLoader - INFO - Total dataset size: 10943
+2025-02-26 17:35:14,036 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-02-26 17:35:14,046 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-02-26 17:35:14,046 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-02-26 17:35:14,046 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-02-26 17:35:14,051 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-02-26 17:35:14,052 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-02-26 17:35:14,052 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-02-26 17:35:14,056 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-02-26 17:35:14,056 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-02-26 17:35:14,057 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-02-26 17:35:14,057 - Client_2 - INFO - Client 2 - Starting with 2918 training samples, 730 testing samples
+2025-02-26 17:35:14,522 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,523 - opacus.validators.module_validator - INFO - Replaced sub_module bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:14,523 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,524 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:14,524 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,524 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:14,524 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,524 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:14,525 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,525 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:35:14,525 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,525 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:14,525 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,526 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:14,526 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,526 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.downsample.1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:14,526 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,527 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:14,527 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,527 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:35:14,527 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,527 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:14,528 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,528 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:14,528 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,528 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.downsample.1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:14,528 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,529 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:14,529 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,529 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:35:14,529 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,530 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:14,530 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,530 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:14,530 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,531 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.downsample.1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:14,531 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,531 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:35:14,531 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:35:14,532 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:38:59,217 - Main - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-02-26 17:38:59,217 - Main - INFO - Number of CPUs: 8
+2025-02-26 17:38:59,217 - Main - INFO - Torch CUDA available: False
+2025-02-26 17:38:59,217 - Main - INFO - Federated Learning with Differential Privacy enabled
+2025-02-26 17:38:59,217 - Main - INFO - Starting server process...
+2025-02-26 17:38:59,229 - Main - INFO - Waiting for server to initialize...
+2025-02-26 17:39:04,231 - Main - INFO - Starting 3 client processes...
+2025-02-26 17:39:04,231 - Main - INFO - Starting client 0 process...
+2025-02-26 17:39:05,245 - Main - INFO - Starting client 1 process...
+2025-02-26 17:39:06,261 - Main - INFO - Starting client 2 process...
+2025-02-26 17:39:07,283 - Main - INFO - All processes started. Waiting for completion...
+2025-02-26 17:39:07,283 - Main - INFO - Waiting for Server process to complete...
+2025-02-26 17:39:11,144 - DataLoader - INFO - Total dataset size: 10943
+2025-02-26 17:39:11,144 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-02-26 17:39:11,157 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-02-26 17:39:11,157 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-02-26 17:39:11,157 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-02-26 17:39:11,163 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-02-26 17:39:11,163 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-02-26 17:39:11,163 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-02-26 17:39:11,167 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-02-26 17:39:11,167 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-02-26 17:39:11,167 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-02-26 17:39:11,169 - Server - INFO - Server-side evaluation - Combined test set size: 2190
+2025-02-26 17:39:11,169 - Server - INFO - Server initialized with differential privacy support
+2025-02-26 17:39:11,169 - Server - INFO - Starting Flower server...
+2025-02-26 17:39:11,169 - flwr - WARNING - DEPRECATED FEATURE: flwr.server.start_server() is deprecated.
+	Instead, use the `flower-superlink` CLI command to start a SuperLink as shown below:
+
+		$ flower-superlink --insecure
+
+	To view usage and all available options, run:
+
+		$ flower-superlink --help
+
+	Using `start_server()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-02-26 17:39:11,171 - flwr - INFO - Starting Flower server, config: num_rounds=2, no round_timeout
+2025-02-26 17:39:11,213 - flwr - INFO - Flower ECE: gRPC server running (2 rounds), SSL is disabled
+2025-02-26 17:39:11,213 - flwr - INFO - [INIT]
+2025-02-26 17:39:11,213 - flwr - INFO - Requesting initial parameters from one random client
+2025-02-26 17:39:24,337 - DataLoader - INFO - Total dataset size: 10943
+2025-02-26 17:39:24,337 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-02-26 17:39:24,354 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-02-26 17:39:24,354 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-02-26 17:39:24,354 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-02-26 17:39:24,369 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-02-26 17:39:24,369 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-02-26 17:39:24,369 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-02-26 17:39:24,369 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-02-26 17:39:24,369 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-02-26 17:39:24,369 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-02-26 17:39:24,369 - Client_0 - INFO - Client 0 - Starting with 2917 training samples, 730 testing samples
+2025-02-26 17:39:25,554 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,555 - opacus.validators.module_validator - INFO - Replaced sub_module bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:25,555 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,555 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:25,555 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,558 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:25,558 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,558 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:25,558 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,562 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:25,562 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,562 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:25,562 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,562 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:25,562 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,562 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.downsample.1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:25,562 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,562 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:25,562 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,562 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:25,562 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,562 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:25,562 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,562 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:25,562 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,562 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.downsample.1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:25,562 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,562 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:25,578 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,578 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:25,578 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,578 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:25,578 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,578 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:25,578 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,578 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.downsample.1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:25,578 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,578 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:25,578 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:25,578 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:26,012 - DataLoader - INFO - Total dataset size: 10943
+2025-02-26 17:39:26,012 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-02-26 17:39:26,019 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-02-26 17:39:26,019 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-02-26 17:39:26,021 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-02-26 17:39:26,025 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-02-26 17:39:26,025 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-02-26 17:39:26,025 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-02-26 17:39:26,028 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-02-26 17:39:26,028 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-02-26 17:39:26,028 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-02-26 17:39:26,029 - Client_1 - INFO - Client 1 - Starting with 2918 training samples, 730 testing samples
+2025-02-26 17:39:26,503 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,504 - opacus.validators.module_validator - INFO - Replaced sub_module bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:26,504 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,504 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:26,504 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,504 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:26,505 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,505 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:26,505 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,505 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:26,505 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,506 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:26,506 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,506 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:26,506 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,506 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.downsample.1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:26,507 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,507 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:26,507 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,507 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:26,508 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,508 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:26,508 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,508 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:26,508 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,509 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.downsample.1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:26,509 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,509 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:26,509 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,509 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:26,510 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,510 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:26,510 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,510 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:26,510 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,511 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.downsample.1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:26,511 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,511 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:26,511 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:26,511 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:26,861 - DataLoader - INFO - Total dataset size: 10943
+2025-02-26 17:39:26,861 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-02-26 17:39:26,866 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-02-26 17:39:26,866 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-02-26 17:39:26,866 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-02-26 17:39:26,869 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-02-26 17:39:26,869 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-02-26 17:39:26,869 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-02-26 17:39:26,872 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-02-26 17:39:26,872 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-02-26 17:39:26,872 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-02-26 17:39:26,872 - Client_2 - INFO - Client 2 - Starting with 2918 training samples, 730 testing samples
+2025-02-26 17:39:27,415 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,417 - opacus.validators.module_validator - INFO - Replaced sub_module bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:27,417 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,418 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:27,419 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,421 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:27,422 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,423 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:27,423 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,424 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:27,425 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,425 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:27,425 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,426 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:27,427 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,428 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.downsample.1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:27,428 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,429 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:27,429 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,429 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:27,430 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,430 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:27,430 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,431 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:27,431 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,431 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.downsample.1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:27,431 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,432 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:27,432 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,432 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:27,432 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,433 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:27,433 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,434 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:27,435 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,436 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.downsample.1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:27,437 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,438 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:27,439 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:27,439 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:30,930 - Client_0 - INFO - Client 0 initialized on device: cpu
+2025-02-26 17:39:30,930 - Client_0 - INFO - Client 0 - Training set size: 2917, Test set size: 730
+2025-02-26 17:39:30,930 - Client_0 - INFO - Client 0 - Differential privacy enabled with epsilon target: 3.0
+2025-02-26 17:39:30,931 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_numpy_client() is deprecated. 
+	Instead, use `flwr.client.start_client()` by ensuring you first call the `.to_client()` method as shown below: 
+	flwr.client.start_client(
+		server_address='<IP>:<PORT>',
+		client=FlowerClient().to_client(), # <-- where FlowerClient is of type flwr.client.NumPyClient object
+	)
+	Using `start_numpy_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-02-26 17:39:30,931 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_client() is deprecated.
+	Instead, use the `flower-supernode` CLI command to start a SuperNode as shown below:
+
+		$ flower-supernode --insecure --superlink='<IP>:<PORT>'
+
+	To view all available options, run:
+
+		$ flower-supernode --help
+
+	Using `start_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-02-26 17:39:30,943 - flwr - DEBUG - Opened insecure gRPC connection (no certificates were passed)
+2025-02-26 17:39:30,963 - flwr - DEBUG - ChannelConnectivity.IDLE
+2025-02-26 17:39:30,963 - flwr - DEBUG - ChannelConnectivity.READY
+2025-02-26 17:39:30,969 - flwr - INFO - 
+2025-02-26 17:39:30,969 - flwr - INFO - Received: get_parameters message 13e886ae-eae8-4135-a139-d9ff63a7c5e4
+2025-02-26 17:39:31,163 - flwr - INFO - Sent reply
+2025-02-26 17:39:31,425 - Client_1 - INFO - Client 1 initialized on device: cpu
+2025-02-26 17:39:31,425 - Client_1 - INFO - Client 1 - Training set size: 2918, Test set size: 730
+2025-02-26 17:39:31,425 - Client_1 - INFO - Client 1 - Differential privacy enabled with epsilon target: 3.0
+2025-02-26 17:39:31,425 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_numpy_client() is deprecated. 
+	Instead, use `flwr.client.start_client()` by ensuring you first call the `.to_client()` method as shown below: 
+	flwr.client.start_client(
+		server_address='<IP>:<PORT>',
+		client=FlowerClient().to_client(), # <-- where FlowerClient is of type flwr.client.NumPyClient object
+	)
+	Using `start_numpy_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-02-26 17:39:31,426 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_client() is deprecated.
+	Instead, use the `flower-supernode` CLI command to start a SuperNode as shown below:
+
+		$ flower-supernode --insecure --superlink='<IP>:<PORT>'
+
+	To view all available options, run:
+
+		$ flower-supernode --help
+
+	Using `start_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-02-26 17:39:31,437 - flwr - DEBUG - Opened insecure gRPC connection (no certificates were passed)
+2025-02-26 17:39:31,455 - flwr - DEBUG - ChannelConnectivity.IDLE
+2025-02-26 17:39:31,457 - flwr - DEBUG - ChannelConnectivity.CONNECTING
+2025-02-26 17:39:31,457 - flwr - DEBUG - ChannelConnectivity.READY
+2025-02-26 17:39:31,541 - flwr - INFO - Received initial parameters from one random client
+2025-02-26 17:39:31,541 - flwr - INFO - Starting evaluation of initial global parameters
+2025-02-26 17:39:31,956 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,957 - opacus.validators.module_validator - INFO - Replaced sub_module bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:31,957 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,957 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:31,957 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,957 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:31,957 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,958 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:31,958 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,958 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 17:39:31,958 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,958 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:31,958 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,959 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:31,959 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,959 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.downsample.1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:31,959 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,959 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:31,959 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,962 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 17:39:31,962 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,962 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:31,962 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,963 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:31,963 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,963 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.downsample.1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:31,963 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,963 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:31,963 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,965 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 17:39:31,965 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,965 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:31,965 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,965 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:31,965 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,966 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.downsample.1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:31,966 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,966 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:31,966 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 17:39:31,966 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 17:39:31,979 - Server - INFO - Server-side evaluation - Round 0 - Testing on 2190 samples
+2025-02-26 17:39:32,011 - Client_2 - INFO - Client 2 initialized on device: cpu
+2025-02-26 17:39:32,011 - Client_2 - INFO - Client 2 - Training set size: 2918, Test set size: 730
+2025-02-26 17:39:32,011 - Client_2 - INFO - Client 2 - Differential privacy enabled with epsilon target: 3.0
+2025-02-26 17:39:32,011 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_numpy_client() is deprecated. 
+	Instead, use `flwr.client.start_client()` by ensuring you first call the `.to_client()` method as shown below: 
+	flwr.client.start_client(
+		server_address='<IP>:<PORT>',
+		client=FlowerClient().to_client(), # <-- where FlowerClient is of type flwr.client.NumPyClient object
+	)
+	Using `start_numpy_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-02-26 17:39:32,011 - flwr - WARNING - DEPRECATED FEATURE: flwr.client.start_client() is deprecated.
+	Instead, use the `flower-supernode` CLI command to start a SuperNode as shown below:
+
+		$ flower-supernode --insecure --superlink='<IP>:<PORT>'
+
+	To view all available options, run:
+
+		$ flower-supernode --help
+
+	Using `start_client()` is deprecated.
+
+            This is a deprecated feature. It will be removed
+            entirely in future versions of Flower.
+        
+2025-02-26 17:39:32,019 - flwr - DEBUG - Opened insecure gRPC connection (no certificates were passed)
+2025-02-26 17:39:32,035 - flwr - DEBUG - ChannelConnectivity.IDLE
+2025-02-26 17:39:32,035 - flwr - DEBUG - ChannelConnectivity.CONNECTING
+2025-02-26 17:39:32,037 - flwr - DEBUG - ChannelConnectivity.READY
+2025-02-26 17:41:55,232 - Server - INFO - 
+Server-side evaluation - Round 0
+2025-02-26 17:41:55,232 - Server - INFO - Loss: 0.7357
+2025-02-26 17:41:55,232 - Server - INFO - Accuracy: 0.4959, F1: 0.3288, Precision: 0.2459, Recall: 0.4959
+2025-02-26 17:41:55,232 - Server - INFO - True class distribution: {0: 1086, 1: 1104}
+2025-02-26 17:41:55,233 - Server - INFO - Prediction distribution: {0: 2190}
+2025-02-26 17:41:55,233 - Server - INFO - 
+Confusion Matrix:
+2025-02-26 17:41:55,235 - Server - INFO - 
+[[1086    0]
+ [1104    0]]
+2025-02-26 17:41:55,235 - Server - INFO - 
+Classification Report:
+2025-02-26 17:41:55,246 - Server - INFO - 
+              precision    recall  f1-score   support
+
+           0       0.50      1.00      0.66      1086
+           1       0.00      0.00      0.00      1104
+
+    accuracy                           0.50      2190
+   macro avg       0.25      0.50      0.33      2190
+weighted avg       0.25      0.50      0.33      2190
+
+2025-02-26 17:41:55,295 - Server - INFO - Model saved after round 0
+2025-02-26 17:41:55,297 - flwr - INFO - initial parameters (loss, other metrics): 0.7357196652370951, {'accuracy': 0.4958904109589041, 'f1': 0.3287771589141452, 'precision': 0.24590729968099082, 'recall': 0.4958904109589041}
+2025-02-26 17:41:55,297 - flwr - INFO - 
+2025-02-26 17:41:55,297 - flwr - INFO - [ROUND 1]
+2025-02-26 17:41:55,297 - flwr - INFO - configure_fit: strategy sampled 3 clients (out of 3)
+2025-02-26 17:41:55,957 - flwr - INFO - 
+2025-02-26 17:41:55,957 - flwr - INFO - Received: train message a60ba60b-97b1-4d8e-9300-d8c818d44fe6
+2025-02-26 17:41:55,979 - Client_1 - INFO - 
+Client 1 - Starting training round
+2025-02-26 17:41:55,979 - Client_1 - INFO - Client 1 - Training on 2918 samples
+2025-02-26 17:41:56,086 - flwr - INFO - 
+2025-02-26 17:41:56,086 - flwr - INFO - Received: train message 1b9fc9d5-9e25-4b3d-808a-05bcf908e01f
+2025-02-26 17:41:56,111 - Client_2 - INFO - 
+Client 2 - Starting training round
+2025-02-26 17:41:56,111 - Client_2 - INFO - Client 2 - Training on 2918 samples
+2025-02-26 17:41:56,205 - flwr - INFO - 
+2025-02-26 17:41:56,205 - flwr - INFO - Received: train message 8514bb2d-8c30-4780-9be1-9ae4334ac3dc
+2025-02-26 17:41:56,230 - Client_0 - INFO - 
+Client 0 - Starting training round
+2025-02-26 17:41:56,230 - Client_0 - INFO - Client 0 - Training on 2917 samples
+2025-02-26 17:42:12,230 - Client_2 - INFO - Client 2 - Epoch 0 - Batch 0/92 - Loss: 0.7852
+2025-02-26 17:42:13,737 - Client_1 - INFO - Client 1 - Epoch 0 - Batch 0/92 - Loss: 0.7562
+2025-02-26 17:42:13,796 - Client_0 - INFO - Client 0 - Epoch 0 - Batch 0/92 - Loss: 0.7376
+2025-02-26 17:44:22,789 - Client_0 - INFO - Client 0 - Epoch 0 - Batch 10/92 - Loss: 1.2000
+2025-02-26 17:44:29,658 - Client_1 - INFO - Client 1 - Epoch 0 - Batch 10/92 - Loss: 0.7400
+2025-02-26 17:44:31,984 - Client_2 - INFO - Client 2 - Epoch 0 - Batch 10/92 - Loss: 0.8556
+2025-02-26 17:46:26,289 - Client_1 - INFO - Client 1 - Epoch 0 - Batch 20/92 - Loss: 0.8848
+2025-02-26 17:46:26,860 - Client_0 - INFO - Client 0 - Epoch 0 - Batch 20/92 - Loss: 1.7129
+2025-02-26 17:46:28,975 - Client_2 - INFO - Client 2 - Epoch 0 - Batch 20/92 - Loss: 0.7551
+2025-02-26 17:48:22,695 - Client_0 - INFO - Client 0 - Epoch 0 - Batch 30/92 - Loss: 1.7978
+2025-02-26 17:48:30,991 - Client_1 - INFO - Client 1 - Epoch 0 - Batch 30/92 - Loss: 0.8268
+2025-02-26 17:48:31,246 - Client_2 - INFO - Client 2 - Epoch 0 - Batch 30/92 - Loss: 0.7775
+2025-02-26 17:50:25,053 - Client_0 - INFO - Client 0 - Epoch 0 - Batch 40/92 - Loss: 1.6795
+2025-02-26 17:50:35,112 - Client_1 - INFO - Client 1 - Epoch 0 - Batch 40/92 - Loss: 1.0713
+2025-02-26 17:50:38,976 - Client_2 - INFO - Client 2 - Epoch 0 - Batch 40/92 - Loss: 2.1177
+2025-02-26 17:52:28,570 - Client_0 - INFO - Client 0 - Epoch 0 - Batch 50/92 - Loss: 1.1827
+2025-02-26 17:52:40,070 - Client_1 - INFO - Client 1 - Epoch 0 - Batch 50/92 - Loss: 1.6036
+2025-02-26 17:52:43,817 - Client_2 - INFO - Client 2 - Epoch 0 - Batch 50/92 - Loss: 1.6433
+2025-02-26 17:54:29,855 - Client_0 - INFO - Client 0 - Epoch 0 - Batch 60/92 - Loss: 0.8588
+2025-02-26 17:54:38,184 - Client_1 - INFO - Client 1 - Epoch 0 - Batch 60/92 - Loss: 2.0756
+2025-02-26 17:54:52,162 - Client_2 - INFO - Client 2 - Epoch 0 - Batch 60/92 - Loss: 1.6594
+2025-02-26 17:56:25,666 - Client_0 - INFO - Client 0 - Epoch 0 - Batch 70/92 - Loss: 1.2254
+2025-02-26 17:56:35,739 - Client_1 - INFO - Client 1 - Epoch 0 - Batch 70/92 - Loss: 1.4539
+2025-02-26 17:56:49,763 - Client_2 - INFO - Client 2 - Epoch 0 - Batch 70/92 - Loss: 1.6574
+2025-02-26 17:58:26,950 - Client_0 - INFO - Client 0 - Epoch 0 - Batch 80/92 - Loss: 1.3666
+2025-02-26 17:58:40,358 - Client_1 - INFO - Client 1 - Epoch 0 - Batch 80/92 - Loss: 1.5473
+2025-02-26 17:58:47,361 - Client_2 - INFO - Client 2 - Epoch 0 - Batch 80/92 - Loss: 1.3111
+2025-02-26 18:00:30,417 - Client_0 - INFO - Client 0 - Epoch 0 - Batch 90/92 - Loss: 1.6614
+2025-02-26 18:00:38,254 - Client_1 - INFO - Client 1 - Epoch 0 - Batch 90/92 - Loss: 1.2647
+2025-02-26 18:00:42,528 - Client_2 - INFO - Client 2 - Epoch 0 - Batch 90/92 - Loss: 0.8866
+2025-02-26 18:00:42,865 - Client_0 - INFO - Client 0 - Epoch 0 - Loss: 1.4031, Accuracy: 0.5114, F1: 0.3681, Precision: 0.4879, Recall: 0.5114
+2025-02-26 18:00:42,865 - Client_0 - INFO - Client 0 - Epoch 0 - Prediction distribution: {0: 78, 1: 2849}
+2025-02-26 18:00:50,828 - Client_1 - INFO - Client 1 - Epoch 0 - Loss: 1.4020, Accuracy: 0.5159, F1: 0.3693, Precision: 0.4617, Recall: 0.5159
+2025-02-26 18:00:50,829 - Client_1 - INFO - Client 1 - Epoch 0 - Prediction distribution: {0: 65, 1: 2837}
+2025-02-26 18:00:54,713 - Client_2 - INFO - Client 2 - Epoch 0 - Loss: 1.2665, Accuracy: 0.5045, F1: 0.3505, Precision: 0.4255, Recall: 0.5045
+2025-02-26 18:00:54,714 - Client_2 - INFO - Client 2 - Epoch 0 - Prediction distribution: {0: 44, 1: 2840}
+2025-02-26 18:01:51,299 - Client_0 - INFO - Client 0 - Validation: Loss=2.0316, Accuracy=0.5178
+2025-02-26 18:01:53,852 - flwr - ERROR - Client raised an exception.
+Traceback (most recent call last):
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\app.py", line 571, in start_client_internal
+    reply_message = client_app(message=message, context=context)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\client_app.py", line 143, in __call__
+    return self._call(message, context)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\client_app.py", line 126, in ffn
+    out_message = handle_legacy_message_from_msgtype(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\message_handler\message_handler.py", line 129, in handle_legacy_message_from_msgtype
+    fit_res = maybe_call_fit(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\client.py", line 255, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\numpy_client.py", line 259, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "C:\Users\HP\Documents\GitHub\IRP_Project\FL_withDP_V2\client.py", line 97, in fit
+    loss.backward()
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\_tensor.py", line 581, in backward
+    torch.autograd.backward(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\autograd\__init__.py", line 347, in backward
+    _engine_run_backward(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\autograd\graph.py", line 825, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\module.py", line 98, in __call__
+    return self.hook(module, *args, **kwargs)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\opacus\grad_sample\grad_sample_module.py", line 328, in capture_backprops_hook
+    activations, backprops = self.rearrange_grad_samples(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\opacus\grad_sample\grad_sample_module.py", line 398, in rearrange_grad_samples
+    activations = module.activations.pop()
+IndexError: pop from empty list
+2025-02-26 18:01:54,097 - flwr - DEBUG - gRPC channel closed
+2025-02-26 18:01:58,377 - Client_1 - INFO - Client 1 - Validation: Loss=1.8185, Accuracy=0.5027
+2025-02-26 18:02:00,561 - flwr - ERROR - Client raised an exception.
+Traceback (most recent call last):
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\app.py", line 571, in start_client_internal
+    reply_message = client_app(message=message, context=context)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\client_app.py", line 143, in __call__
+    return self._call(message, context)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\client_app.py", line 126, in ffn
+    out_message = handle_legacy_message_from_msgtype(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\message_handler\message_handler.py", line 129, in handle_legacy_message_from_msgtype
+    fit_res = maybe_call_fit(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\client.py", line 255, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\numpy_client.py", line 259, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "C:\Users\HP\Documents\GitHub\IRP_Project\FL_withDP_V2\client.py", line 97, in fit
+    loss.backward()
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\_tensor.py", line 581, in backward
+    torch.autograd.backward(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\autograd\__init__.py", line 347, in backward
+    _engine_run_backward(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\autograd\graph.py", line 825, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\module.py", line 98, in __call__
+    return self.hook(module, *args, **kwargs)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\opacus\grad_sample\grad_sample_module.py", line 328, in capture_backprops_hook
+    activations, backprops = self.rearrange_grad_samples(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\opacus\grad_sample\grad_sample_module.py", line 398, in rearrange_grad_samples
+    activations = module.activations.pop()
+IndexError: pop from empty list
+2025-02-26 18:02:00,651 - flwr - DEBUG - gRPC channel closed
+2025-02-26 18:02:01,146 - Client_2 - INFO - Client 2 - Validation: Loss=1.8184, Accuracy=0.4918
+2025-02-26 18:02:03,088 - flwr - ERROR - Client raised an exception.
+Traceback (most recent call last):
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\app.py", line 571, in start_client_internal
+    reply_message = client_app(message=message, context=context)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\client_app.py", line 143, in __call__
+    return self._call(message, context)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\client_app.py", line 126, in ffn
+    out_message = handle_legacy_message_from_msgtype(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\message_handler\message_handler.py", line 129, in handle_legacy_message_from_msgtype
+    fit_res = maybe_call_fit(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\client.py", line 255, in maybe_call_fit
+    return client.fit(fit_ins)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\flwr\client\numpy_client.py", line 259, in _fit
+    results = self.numpy_client.fit(parameters, ins.config)  # type: ignore
+  File "C:\Users\HP\Documents\GitHub\IRP_Project\FL_withDP_V2\client.py", line 97, in fit
+    loss.backward()
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\_tensor.py", line 581, in backward
+    torch.autograd.backward(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\autograd\__init__.py", line 347, in backward
+    _engine_run_backward(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\autograd\graph.py", line 825, in _engine_run_backward
+    return Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\torch\nn\modules\module.py", line 98, in __call__
+    return self.hook(module, *args, **kwargs)
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\opacus\grad_sample\grad_sample_module.py", line 328, in capture_backprops_hook
+    activations, backprops = self.rearrange_grad_samples(
+  File "C:\Users\HP\AppData\Local\Programs\Python\Python310\lib\site-packages\opacus\grad_sample\grad_sample_module.py", line 398, in rearrange_grad_samples
+    activations = module.activations.pop()
+IndexError: pop from empty list
+2025-02-26 18:02:03,137 - flwr - INFO - aggregate_fit: received 0 results and 3 failures
+2025-02-26 18:02:03,164 - flwr - DEBUG - gRPC channel closed
+2025-02-26 18:02:03,919 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,920 - opacus.validators.module_validator - INFO - Replaced sub_module bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 18:02:03,920 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,921 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 18:02:03,921 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,921 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.0.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 18:02:03,922 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,922 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn1 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 18:02:03,922 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,922 - opacus.validators.module_validator - INFO - Replaced sub_module layer1.1.bn2 : BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 64, eps=1e-05, affine=True)
+2025-02-26 18:02:03,923 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,923 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 18:02:03,923 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,923 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 18:02:03,924 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,924 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.0.downsample.1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 18:02:03,924 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,925 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn1 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 18:02:03,925 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,925 - opacus.validators.module_validator - INFO - Replaced sub_module layer2.1.bn2 : BatchNorm2d(128, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 128, eps=1e-05, affine=True)
+2025-02-26 18:02:03,925 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,926 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 18:02:03,926 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,926 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 18:02:03,926 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,927 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.0.downsample.1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 18:02:03,927 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,927 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn1 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 18:02:03,927 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,928 - opacus.validators.module_validator - INFO - Replaced sub_module layer3.1.bn2 : BatchNorm2d(256, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 256, eps=1e-05, affine=True)
+2025-02-26 18:02:03,928 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,928 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 18:02:03,928 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,929 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 18:02:03,929 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,929 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.0.downsample.1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 18:02:03,930 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,930 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn1 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 18:02:03,930 - opacus.validators.batch_norm - INFO - The default batch_norm fixer replaces BatchNorm with GroupNorm.To overwrite the default to InstanceNorm, call fix() with replace_bn_with_in=True.
+2025-02-26 18:02:03,930 - opacus.validators.module_validator - INFO - Replaced sub_module layer4.1.bn2 : BatchNorm2d(512, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True) with GroupNorm(32, 512, eps=1e-05, affine=True)
+2025-02-26 18:02:03,948 - Server - INFO - Server-side evaluation - Round 1 - Testing on 2190 samples
+2025-02-26 18:03:06,439 - Server - INFO - 
+Server-side evaluation - Round 1
+2025-02-26 18:03:06,439 - Server - INFO - Loss: 0.7357
+2025-02-26 18:03:06,439 - Server - INFO - Accuracy: 0.4959, F1: 0.3288, Precision: 0.2459, Recall: 0.4959
+2025-02-26 18:03:06,439 - Server - INFO - True class distribution: {0: 1086, 1: 1104}
+2025-02-26 18:03:06,439 - Server - INFO - Prediction distribution: {0: 2190}
+2025-02-26 18:03:06,439 - Server - INFO - 
+Confusion Matrix:
+2025-02-26 18:03:06,443 - Server - INFO - 
+[[1086    0]
+ [1104    0]]
+2025-02-26 18:03:06,443 - Server - INFO - 
+Classification Report:
+2025-02-26 18:03:06,456 - Server - INFO - 
+              precision    recall  f1-score   support
+
+           0       0.50      1.00      0.66      1086
+           1       0.00      0.00      0.00      1104
+
+    accuracy                           0.50      2190
+   macro avg       0.25      0.50      0.33      2190
+weighted avg       0.25      0.50      0.33      2190
+
+2025-02-26 18:03:06,515 - Server - INFO - Model saved after round 1
+2025-02-26 18:03:06,520 - flwr - INFO - fit progress: (1, 0.7357196652370951, {'accuracy': 0.4958904109589041, 'f1': 0.3287771589141452, 'precision': 0.24590729968099082, 'recall': 0.4958904109589041}, 1271.2226334000002)
+2025-02-26 18:24:41,255 - Main - INFO - Server process completed!
+2025-02-26 18:24:41,255 - Main - INFO - Waiting for Client 0 process to complete...
+2025-02-26 18:24:41,255 - Main - INFO - Client 0 process completed!
+2025-02-26 18:24:41,255 - Main - INFO - Waiting for Client 1 process to complete...
+2025-02-26 18:24:41,255 - Main - INFO - Client 1 process completed!
+2025-02-26 18:24:41,255 - Main - INFO - Waiting for Client 2 process to complete...
+2025-02-26 18:24:41,255 - Main - INFO - Client 2 process completed!
+2025-02-26 18:24:41,255 - Main - INFO - All processes completed successfully!
