@@ -534,7 +534,7 @@ if __name__ == "__main__":
     parser.add_argument('--epochs', type=int, default=1, help='Number of epochs per round')
     parser.add_argument('--noise_multiplier', type=float, default=1.0, help='Noise multiplier for DP')
     parser.add_argument('--max_grad_norm', type=float, default=1.0, help='Maximum gradient norm for clipping')
-    parser.add_argument('--distribution', type=str, default='iid', choices=['iid', 'non_iid'],
+    parser.add_argument('--distribution', type=str, default='non_iid', choices=['iid', 'non_iid'],
                         help='Data distribution type (iid or non_iid)')
     parser.add_argument('--alpha', type=float, default=0.5,
                         help='Dirichlet concentration parameter for non-IID distribution')

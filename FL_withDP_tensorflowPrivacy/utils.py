@@ -274,12 +274,34 @@ def load_data(img_dir, labels_path, num_clients=3, batch_size=8, distribution='i
             client_train_df = full_train_df.iloc[client_train_indices].reset_index(drop=True)
 
             # For test data, each client gets a stratified subset of the full test set
-            client_test_df, _ = train_test_split(
-                full_test_df,
-                train_size=len(client_train_df) * 0.25,  # Scale test size proportionally
-                stratify=full_test_df['diagnosis'],
-                random_state=42 + client_idx
-            )
+            # First, calculate the test size we want (25% of train size)
+            desired_test_size = int(len(client_train_df) * 0.25)  # Convert to integer
+
+            # Make sure desired_test_size is at least 1 and not more than available test data
+            desired_test_size = max(1, min(desired_test_size, len(full_test_df)))
+
+            # Use train_test_split with test_size parameter instead of train_size
+            # We're using test_size as a proportion to select from full_test_df
+            try:
+                # Calculate proportion of full_test_df to use (desired_test_size / full_test_df size)
+                test_proportion = min(0.99, desired_test_size / len(full_test_df))
+
+                # Use test_size as a proportion for train_test_split
+                _, client_test_df = train_test_split(
+                    full_test_df,
+                    test_size=test_proportion,  # Use as proportion
+                    stratify=full_test_df['diagnosis'],
+                    random_state=42 + client_idx
+                )
+
+                # If result doesn't match desired size, adjust with straightforward sampling
+                if len(client_test_df) != desired_test_size:
+                    client_test_df = client_test_df.sample(n=min(desired_test_size, len(client_test_df)),
+                                                           random_state=42 + client_idx)
+            except ValueError as e:
+                # Fallback if stratified sampling fails
+                logger.warning(f"Stratified sampling failed for client {client_idx}: {e}")
+                client_test_df = full_test_df.sample(n=desired_test_size, random_state=42 + client_idx)
 
             # Combine train and test for this client
             client_df = pd.concat([client_train_df, client_test_df])
@@ -1341,20 +1363,46 @@ def plot_all_clients_per_round_accuracy(client_ids, all_client_accuracies, globa
     """
     os.makedirs("./visualizations/client_comparison", exist_ok=True)
 
-    # Determine the number of rounds based on data
+    # Ensure we have at least one client with data
+    if not all_client_accuracies or len(all_client_accuracies) == 0:
+        return None
+
+    # Determine the number of rounds based on the first client's data
     num_rounds = len(all_client_accuracies[0])
     rounds = list(range(1, num_rounds + 1))
+
+    # Make sure we only include clients with data
+    valid_clients = []
+    valid_accuracies = []
+    for i, client_id in enumerate(client_ids):
+        if i < len(all_client_accuracies) and len(all_client_accuracies[i]) > 0:
+            valid_clients.append(client_id)
+            valid_accuracies.append(all_client_accuracies[i])
+
+    if not valid_clients:
+        return None
 
     plt.figure(figsize=(12, 8))
 
     # Plot each client's accuracy
-    for i, client_id in enumerate(client_ids):
-        plt.plot(rounds, all_client_accuracies[i], marker='o', linestyle='-', alpha=0.7,
-                 label=f'Client {client_id}')
+    for i, client_id in enumerate(valid_clients):
+        if i < len(valid_accuracies):
+            plt.plot(rounds, valid_accuracies[i], marker='o', linestyle='-', alpha=0.7,
+                     label=f'Client {client_id}')
 
-    # Plot global model accuracy if provided
-    if global_accuracies:
-        plt.plot(rounds, global_accuracies, 'ko-', linewidth=3, markersize=10, label='Global Model')
+    # Plot global model accuracy if provided and dimensions match
+    if global_accuracies and len(global_accuracies) > 0:
+        # Make sure global_accuracies has the same length as rounds
+        if len(global_accuracies) < len(rounds):
+            # Pad with NaN if needed
+            global_accuracies_padded = global_accuracies + [np.nan] * (len(rounds) - len(global_accuracies))
+            plt.plot(rounds, global_accuracies_padded, 'ko-', linewidth=3, markersize=10, label='Global Model')
+        elif len(global_accuracies) > len(rounds):
+            # Truncate if we have too many global accuracies
+            plt.plot(rounds, global_accuracies[:len(rounds)], 'ko-', linewidth=3, markersize=10, label='Global Model')
+        else:
+            # Perfect match
+            plt.plot(rounds, global_accuracies, 'ko-', linewidth=3, markersize=10, label='Global Model')
 
     plt.title('Client and Global Model Accuracy per Round', fontsize=14)
     plt.xlabel('Round', fontsize=12)
@@ -1368,7 +1416,6 @@ def plot_all_clients_per_round_accuracy(client_ids, all_client_accuracies, globa
     plt.close()
 
     return filepath
-
 
 def plot_dp_vs_non_dp_performance(rounds, dp_accuracies, non_dp_accuracies):
     """

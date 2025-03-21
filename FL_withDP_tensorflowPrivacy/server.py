@@ -478,25 +478,40 @@ def get_evaluate_fn(test_loader, num_rounds):
                     # Get unique client IDs
                     client_ids = sorted(client_df['client_id'].unique())
 
-                    # Collect accuracy data for each client
-                    all_client_accuracies = []
-                    for client_id in client_ids:
-                        # Get this client's data, sorted by round
-                        client_data = client_df[client_df['client_id'] == client_id].sort_values('round')
-                        client_accuracies = client_data['accuracy'].tolist()
+                    if len(client_ids) > 0:
+                        # Collect accuracy data for each client
+                        all_client_accuracies = []
+                        valid_client_ids = []
 
-                        # Ensure we have data for all rounds (fill missing with NaN)
-                        if len(client_accuracies) < num_rounds:
-                            client_accuracies += [np.nan] * (num_rounds - len(client_accuracies))
+                        for client_id in client_ids:
+                            # Get this client's data, sorted by round
+                            client_data = client_df[client_df['client_id'] == client_id].sort_values('round')
 
-                        all_client_accuracies.append(client_accuracies)
+                            # Only include clients with data
+                            if len(client_data) > 0:
+                                client_accuracies = client_data['accuracy'].tolist()
 
-                    # Create the visualization
-                    plot_all_clients_per_round_accuracy(client_ids, all_client_accuracies, global_accuracies)
-                    logger.info("Created client and global model accuracy progression visualization")
+                                # Ensure we have data for all rounds (fill missing with NaN)
+                                if len(client_accuracies) < num_rounds:
+                                    client_accuracies += [np.nan] * (num_rounds - len(client_accuracies))
+
+                                all_client_accuracies.append(client_accuracies)
+                                valid_client_ids.append(client_id)
+
+                        # Check if we have any valid data
+                        if valid_client_ids and all_client_accuracies:
+                            # Make sure global_accuracies has at least one value
+                            if global_accuracies:
+                                # Create the visualization
+                                plot_all_clients_per_round_accuracy(valid_client_ids, all_client_accuracies,
+                                                                    global_accuracies)
+                                logger.info("Created client and global model accuracy progression visualization")
+                            else:
+                                # Create the visualization without global model data
+                                plot_all_clients_per_round_accuracy(valid_client_ids, all_client_accuracies)
+                                logger.info("Created client accuracy progression visualization (no global model data)")
             except Exception as e:
                 logger.error(f"Error creating client accuracy progression visualization: {e}")
-
         return loss, {
             "accuracy": metrics["accuracy"],
             "f1": metrics["f1"],
