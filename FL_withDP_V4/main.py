@@ -6,9 +6,11 @@ import logging
 import os
 import argparse
 import matplotlib.pyplot as plt
-
+import numpy as np
 import warnings
 
+import warnings
+warnings.filterwarnings("ignore", message="The NumPy module was reloaded")
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 warnings.filterwarnings("ignore", category=UserWarning)
 import warnings

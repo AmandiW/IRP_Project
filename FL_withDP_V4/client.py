@@ -1,5 +1,9 @@
 import flwr as fl
 import torch
+from opacus import PrivacyEngine
+# from opacus.utils.batch_memory_manager import BatchMemoryManager
+
+
 from utils import create_model, load_data, EarlyStopping, create_privacy_engine, calculate_privacy_metrics
 from utils import plot_confusion_matrix, plot_metrics_over_rounds, plot_privacy_budget, plot_roc_curve
 from utils import plot_class_distribution, PrivacyMetricsLogger
@@ -25,8 +29,7 @@ class RetinopathyClient(fl.client.NumPyClient):
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = create_model(make_dp_compatible=True).to(self.device)
         self.criterion = torch.nn.CrossEntropyLoss()
-        self.optimizer = torch.optim.Adam(self.model.parameters())
-
+        self.optimizer = torch.optim.Adam([p for p in self.model.parameters() if p.requires_grad])
         # Differential privacy parameters
         self.dp_params = dp_params or {
             "noise_multiplier": 1.0,  # Higher noise = more privacy but less accuracy
@@ -63,6 +66,13 @@ class RetinopathyClient(fl.client.NumPyClient):
         state_dict = OrderedDict({k: torch.tensor(v) for k, v in params_dict})
         self.model.load_state_dict(state_dict, strict=True)
 
+        # Re-freeze all parameters except fc layer after loading weights
+        for name, param in self.model.named_parameters():
+            if 'fc' not in name:  # If not in the final layer
+                param.requires_grad = False
+            else:
+                param.requires_grad = True
+
     def fit(self, parameters, config):
         self.current_round = config.get("server_round", self.current_round + 1)
         self.logger.info(f"\nClient {self.client_id} - Starting training round {self.current_round}")
@@ -75,25 +85,20 @@ class RetinopathyClient(fl.client.NumPyClient):
 
         # Setup differential privacy
         # Calculate sample rate based on batch size and dataset size
-        batch_size = next(iter(self.train_loader))[0].shape[0]
+        batch_size = 8
         sample_rate = batch_size / self.train_size
 
         # Create new optimizer for this round (required for DP integration)
-        optimizer = torch.optim.Adam(self.model.parameters())
+        #optimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, self.model.parameters()))
 
-        # Initialize privacy engine with the simpler attach method
-        self.privacy_engine, optimizer = create_privacy_engine(
+        # Initialize privacy engine with the privacy-wrapped components
+        self.privacy_engine, optimizer, train_loader = create_privacy_engine(
             model=self.model,
-            optimizer=optimizer,
+            optimizer=None,  # Pass None since we'll create a new optimizer in the function
             data_loader=self.train_loader,
             noise_multiplier=self.dp_params["noise_multiplier"],
             max_grad_norm=self.dp_params["max_grad_norm"]
         )
-
-        # Then use this optimizer in the training loop
-
-        # Use the DP optimizer
-        # optimizer = dp_optimizer
 
         # Training
         self.model.train()
@@ -104,14 +109,25 @@ class RetinopathyClient(fl.client.NumPyClient):
             all_targets = []
             all_predictions = []
 
-            for batch_idx, (data, target) in enumerate(self.train_loader):
-                data, target = data.to(self.device), target.to(self.device)
+            # Simple direct training loop - no batch memory manager
+            for batch_idx, (data, target) in enumerate(train_loader):
+                # Zero gradients first
                 optimizer.zero_grad()
+
+                # Move data to device
+                data, target = data.to(self.device), target.to(self.device)
+
+                # Forward pass
                 output = self.model(data)
                 loss = self.criterion(output, target)
+
+                # Backward pass
                 loss.backward()
+
+                # Update with privacy
                 optimizer.step()
 
+                # Collect metrics
                 running_loss += loss.item()
                 _, predicted = output.max(1)
                 total += target.size(0)
@@ -120,18 +136,18 @@ class RetinopathyClient(fl.client.NumPyClient):
                 all_targets.extend(target.cpu().numpy())
                 all_predictions.extend(predicted.cpu().numpy())
 
-                if batch_idx % 10 == 0:
+                if batch_idx % 5 == 0:
                     self.logger.info(
-                        f"Client {self.client_id} - Epoch {epoch} - Batch {batch_idx}/{len(self.train_loader)} - Loss: {loss.item():.4f}")
+                        f"Client {self.client_id} - Epoch {epoch} - Batch {batch_idx}/{len(train_loader)} - Loss: {loss.item():.4f}")
 
-            epoch_loss = running_loss / len(self.train_loader)
+            # Rest of your epoch summary code remains the same
+            epoch_loss = running_loss / len(train_loader)
             epoch_accuracy = correct / total
 
             # Calculate other metrics
             f1 = f1_score(all_targets, all_predictions, average='weighted')
             precision = precision_score(all_targets, all_predictions, average='weighted', zero_division=0)
             recall = recall_score(all_targets, all_predictions, average='weighted', zero_division=0)
-
             # Count class predictions
             unique, counts = np.unique(all_predictions, return_counts=True)
             pred_distribution = dict(zip(unique, counts))

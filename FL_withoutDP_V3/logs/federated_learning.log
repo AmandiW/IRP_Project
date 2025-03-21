@@ -1210,3 +1210,129 @@ Client 1 - Starting training round
 2025-03-20 20:12:44,406 - flwr - DEBUG - gRPC channel closed
 2025-03-20 20:12:44,413 - flwr - DEBUG - gRPC channel closed
 2025-03-20 20:12:44,506 - flwr - DEBUG - gRPC channel closed
+2025-03-20 21:23:43,438 - Main - INFO - Python version: 3.10.0 (tags/v3.10.0:b494f59, Oct  4 2021, 19:00:18) [MSC v.1929 64 bit (AMD64)]
+2025-03-20 21:23:43,438 - Main - INFO - Number of CPUs: 8
+2025-03-20 21:23:43,438 - Main - INFO - Torch CUDA available: False
+2025-03-20 21:23:43,440 - Main - INFO - Starting server process...
+2025-03-20 21:23:43,446 - Main - INFO - Waiting for server to initialize...
+2025-03-20 21:23:48,448 - Main - INFO - Starting 3 client processes...
+2025-03-20 21:23:48,449 - Main - INFO - Starting client 0 process...
+2025-03-20 21:23:49,458 - Main - INFO - Starting client 1 process...
+2025-03-20 21:23:49,987 - DataLoader - INFO - Total dataset size: 10943
+2025-03-20 21:23:49,987 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-03-20 21:23:49,992 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-03-20 21:23:49,992 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-03-20 21:23:49,993 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-03-20 21:23:49,995 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-03-20 21:23:49,995 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-03-20 21:23:49,995 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-03-20 21:23:49,997 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-03-20 21:23:49,997 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-03-20 21:23:49,997 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-03-20 21:23:49,998 - Server - INFO - Server-side evaluation - Combined test set size: 2190
+2025-03-20 21:23:49,998 - Server - INFO - Starting Flower server...
+2025-03-20 21:23:49,999 - flwr - INFO - Starting Flower server, config: ServerConfig(num_rounds=2, round_timeout=None)
+2025-03-20 21:23:50,014 - flwr - INFO - Flower ECE: gRPC server running (2 rounds), SSL is disabled
+2025-03-20 21:23:50,014 - flwr - INFO - Initializing global parameters
+2025-03-20 21:23:50,015 - flwr - INFO - Requesting initial parameters from one random client
+2025-03-20 21:23:50,478 - Main - INFO - Starting client 2 process...
+2025-03-20 21:23:51,489 - Main - INFO - All processes started. Waiting for completion...
+2025-03-20 21:23:51,489 - Main - INFO - Waiting for Server process to complete...
+2025-03-20 21:23:55,152 - DataLoader - INFO - Total dataset size: 10943
+2025-03-20 21:23:55,152 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-03-20 21:23:55,158 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-03-20 21:23:55,158 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-03-20 21:23:55,158 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-03-20 21:23:55,160 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-03-20 21:23:55,160 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-03-20 21:23:55,160 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-03-20 21:23:55,162 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-03-20 21:23:55,162 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-03-20 21:23:55,162 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-03-20 21:23:55,162 - Client_0 - INFO - Client 0 - Starting with 2917 training samples, 730 testing samples
+2025-03-20 21:23:55,371 - Client_0 - INFO - Client 0 initialized on device: cpu
+2025-03-20 21:23:55,371 - Client_0 - INFO - Client 0 - Training set size: 2917, Test set size: 730
+2025-03-20 21:23:55,382 - flwr - INFO - Opened insecure gRPC connection (no certificates were passed)
+2025-03-20 21:23:55,397 - flwr - DEBUG - ChannelConnectivity.IDLE
+2025-03-20 21:23:55,398 - flwr - DEBUG - ChannelConnectivity.READY
+2025-03-20 21:23:55,821 - flwr - INFO - Received initial parameters from one random client
+2025-03-20 21:23:55,821 - flwr - INFO - Evaluating initial parameters
+2025-03-20 21:23:56,052 - Server - INFO - Server-side evaluation - Round 0 - Testing on 2190 samples
+2025-03-20 21:23:56,469 - DataLoader - INFO - Total dataset size: 10943
+2025-03-20 21:23:56,469 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-03-20 21:23:56,488 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-03-20 21:23:56,488 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-03-20 21:23:56,488 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-03-20 21:23:56,496 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-03-20 21:23:56,496 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-03-20 21:23:56,496 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-03-20 21:23:56,500 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-03-20 21:23:56,500 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-03-20 21:23:56,501 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-03-20 21:23:56,501 - Client_1 - INFO - Client 1 - Starting with 2918 training samples, 730 testing samples
+2025-03-20 21:23:56,890 - Client_1 - INFO - Client 1 initialized on device: cpu
+2025-03-20 21:23:56,891 - Client_1 - INFO - Client 1 - Training set size: 2918, Test set size: 730
+2025-03-20 21:23:56,904 - flwr - INFO - Opened insecure gRPC connection (no certificates were passed)
+2025-03-20 21:23:56,929 - flwr - DEBUG - ChannelConnectivity.IDLE
+2025-03-20 21:23:56,930 - flwr - DEBUG - ChannelConnectivity.CONNECTING
+2025-03-20 21:23:56,935 - flwr - DEBUG - ChannelConnectivity.READY
+2025-03-20 21:23:58,402 - DataLoader - INFO - Total dataset size: 10943
+2025-03-20 21:23:58,404 - DataLoader - INFO - Class distribution: {1: 5556, 0: 5387}
+2025-03-20 21:23:58,456 - DataLoader - INFO - Client 0 - Train samples: 2917, Test samples: 730
+2025-03-20 21:23:58,458 - DataLoader - INFO - Client 0 - Train class distribution: {1: 1472, 0: 1445}
+2025-03-20 21:23:58,460 - DataLoader - INFO - Client 0 - Test class distribution: {1: 378, 0: 352}
+2025-03-20 21:23:58,489 - DataLoader - INFO - Client 1 - Train samples: 2918, Test samples: 730
+2025-03-20 21:23:58,489 - DataLoader - INFO - Client 1 - Train class distribution: {1: 1498, 0: 1420}
+2025-03-20 21:23:58,489 - DataLoader - INFO - Client 1 - Test class distribution: {1: 367, 0: 363}
+2025-03-20 21:23:58,504 - DataLoader - INFO - Client 2 - Train samples: 2918, Test samples: 730
+2025-03-20 21:23:58,504 - DataLoader - INFO - Client 2 - Train class distribution: {1: 1482, 0: 1436}
+2025-03-20 21:23:58,504 - DataLoader - INFO - Client 2 - Test class distribution: {0: 371, 1: 359}
+2025-03-20 21:23:58,506 - Client_2 - INFO - Client 2 - Starting with 2918 training samples, 730 testing samples
+2025-03-20 21:23:58,973 - Client_2 - INFO - Client 2 initialized on device: cpu
+2025-03-20 21:23:58,973 - Client_2 - INFO - Client 2 - Training set size: 2918, Test set size: 730
+2025-03-20 21:23:58,984 - flwr - INFO - Opened insecure gRPC connection (no certificates were passed)
+2025-03-20 21:23:58,991 - flwr - DEBUG - ChannelConnectivity.IDLE
+2025-03-20 21:23:58,992 - flwr - DEBUG - ChannelConnectivity.CONNECTING
+2025-03-20 21:23:58,995 - flwr - DEBUG - ChannelConnectivity.READY
+2025-03-20 21:25:43,959 - Server - INFO - 
+Server-side evaluation - Round 0
+2025-03-20 21:25:43,959 - Server - INFO - Loss: 1.0047
+2025-03-20 21:25:43,959 - Server - INFO - Accuracy: 0.4959, F1: 0.3288, Precision: 0.2459, Recall: 0.4959
+2025-03-20 21:25:43,959 - Server - INFO - True class distribution: {0: 1086, 1: 1104}
+2025-03-20 21:25:43,959 - Server - INFO - Prediction distribution: {0: 2190}
+2025-03-20 21:25:43,960 - Server - INFO - 
+Confusion Matrix:
+2025-03-20 21:25:43,963 - Server - INFO - 
+[[1086    0]
+ [1104    0]]
+2025-03-20 21:25:43,963 - Server - INFO - 
+Classification Report:
+2025-03-20 21:25:43,983 - Server - INFO - 
+              precision    recall  f1-score   support
+
+           0       0.50      1.00      0.66      1086
+           1       0.00      0.00      0.00      1104
+
+    accuracy                           0.50      2190
+   macro avg       0.25      0.50      0.33      2190
+weighted avg       0.25      0.50      0.33      2190
+
+2025-03-20 21:25:44,051 - Server - INFO - Model saved after round 0
+2025-03-20 21:25:44,069 - flwr - INFO - initial parameters (loss, other metrics): 1.0046955597573433, {'accuracy': 0.4958904109589041, 'f1': 0.3287771589141452, 'precision': 0.24590729968099082, 'recall': 0.4958904109589041}
+2025-03-20 21:25:44,070 - flwr - INFO - FL starting
+2025-03-20 21:25:44,070 - flwr - DEBUG - fit_round 1: strategy sampled 3 clients (out of 3)
+2025-03-20 21:25:44,707 - Client_0 - INFO - 
+Client 0 - Starting training round
+2025-03-20 21:25:44,708 - Client_0 - INFO - Client 0 - Training on 2917 samples
+2025-03-20 21:25:44,853 - Client_2 - INFO - 
+Client 2 - Starting training round
+2025-03-20 21:25:44,854 - Client_2 - INFO - Client 2 - Training on 2918 samples
+2025-03-20 21:25:44,902 - Client_1 - INFO - 
+Client 1 - Starting training round
+2025-03-20 21:25:44,902 - Client_1 - INFO - Client 1 - Training on 2918 samples
+2025-03-20 21:25:53,991 - Client_0 - INFO - Client 0 - Epoch 0 - Batch 0/92 - Loss: 1.0834
+2025-03-20 21:25:54,008 - Client_2 - INFO - Client 2 - Epoch 0 - Batch 0/92 - Loss: 0.8898
+2025-03-20 21:25:54,070 - Client_1 - INFO - Client 1 - Epoch 0 - Batch 0/92 - Loss: 0.9579
+2025-03-20 21:26:11,407 - flwr - DEBUG - gRPC channel closed
+2025-03-20 21:26:11,408 - flwr - DEBUG - gRPC channel closed
+2025-03-20 21:26:11,986 - flwr - DEBUG - gRPC channel closed
