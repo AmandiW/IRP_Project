@@ -612,8 +612,8 @@ class PrivacyMetricsLogger:
         # Log the metrics
         self.logger.info(
             f"{'Global' if self.is_global else f'Client {self.client_id}'} Privacy Metrics - Round {round_num}:")
-        self.logger.info(f"  ε (Epsilon): {privacy_metrics['epsilon']:.4f}")
-        self.logger.info(f"  δ (Delta): {privacy_metrics['delta']}")
+        self.logger.info(f"  (Epsilon): {privacy_metrics['epsilon']:.4f}")
+        self.logger.info(f"  (Delta): {privacy_metrics['delta']}")
         self.logger.info(f"  Noise Multiplier: {privacy_metrics['noise_multiplier']}")
         self.logger.info(f"  Max Gradient Norm: {privacy_metrics['max_grad_norm']}")
 
