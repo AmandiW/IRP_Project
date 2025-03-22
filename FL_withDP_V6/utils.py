@@ -1,3 +1,5 @@
+from collections import OrderedDict
+
 import torch
 import torch.nn as nn
 from torchvision import models, transforms
@@ -1773,31 +1775,20 @@ def demonstrate_gradient_inversion(model, sample_image, dp_params, device="cpu",
     try:
         # Step 1: Prepare sample image
         logger.info(f"Preparing sample image (shape before: {sample_image.shape})")
-        sample_image = sample_image.to(device)
-
-        # Create a copy for gradient computation to avoid modifying the original
-        input_image = sample_image.clone().detach().unsqueeze(0)  # Add batch dimension
-        input_image.requires_grad = True
-        logger.info(f"Input image shape after preparation: {input_image.shape}")
+        sample_image = sample_image.to(device).unsqueeze(0)  # Add batch dimension
+        logger.info(f"Sample image shape after preparation: {sample_image.shape}")
+        sample_image.requires_grad = True
 
         # Step 2: Compute regular gradients (no DP)
         logger.info("Computing regular gradients (no DP)")
         criterion = torch.nn.CrossEntropyLoss()
         model.zero_grad()
-        output = model(input_image)
-
-        # Check model output
-        logger.info(f"Model output shape: {output.shape}, values: {output.detach().cpu().numpy()}")
-
-        # Use model's prediction as target for more realistic gradient
-        _, predicted = output.max(1)
-        target = predicted.clone()  # Use the model's own prediction
-        logger.info(f"Using target label: {target.item()}")
-
+        output = model(sample_image)
+        # Assuming binary classification for retinopathy (0 or 1)
+        target = torch.tensor([1], device=device)
         loss = criterion(output, target)
         loss.backward()
 
-        # Create copies of gradients before zeroing them
         regular_gradients = {}
         trainable_params = 0
         for name, param in model.named_parameters():
@@ -1807,16 +1798,10 @@ def demonstrate_gradient_inversion(model, sample_image, dp_params, device="cpu",
 
         logger.info(f"Collected regular gradients for {trainable_params} trainable parameters")
 
-        # Log some basic statistics about the gradients
-        for name, grad in regular_gradients.items():
-            if 'fc' in name:  # Focus on fully connected layers where most information is
-                logger.info(
-                    f"Regular gradient '{name}': shape={grad.shape}, mean={grad.mean().item():.6f}, std={grad.std().item():.6f}, norm={grad.norm().item():.6f}")
-
         # Step 3: Compute DP-protected gradients
         logger.info("Computing DP-protected gradients")
         model.zero_grad()
-        output = model(input_image)
+        output = model(sample_image)
         loss = criterion(output, target)
         loss.backward()
 
@@ -1834,36 +1819,24 @@ def demonstrate_gradient_inversion(model, sample_image, dp_params, device="cpu",
         for name, param in model.named_parameters():
             if param.requires_grad and param.grad is not None:
                 clipped_grad = param.grad * scaling_factor
-                # Use consistent random seed for reproducibility
-                torch.manual_seed(42)
                 noise = torch.randn_like(param.grad) * dp_params["noise_multiplier"] * dp_params["max_grad_norm"]
                 dp_gradients[name] = clipped_grad + noise
 
-                # Log statistics for DP gradients
-                if 'fc' in name:
-                    logger.info(
-                        f"DP gradient '{name}': mean={dp_gradients[name].mean().item():.6f}, std={dp_gradients[name].std().item():.6f}, norm={dp_gradients[name].norm().item():.6f}")
-
         logger.info(f"Created DP-protected gradients with noise multiplier: {dp_params['noise_multiplier']}")
 
-        # Check if gradient norms are reasonable
-        reg_norm = sum(g.norm().item() for g in regular_gradients.values())
-        dp_norm = sum(g.norm().item() for g in dp_gradients.values())
-        logger.info(f"Total gradient norm - Regular: {reg_norm:.4f}, DP: {dp_norm:.4f}")
-
-        # Step 4: Attempt reconstruction from both gradient types with more iterations
+        # Step 4: Attempt reconstruction from both gradient types
         logger.info("Attempting to reconstruct from regular gradients")
-        regular_recon = reconstruct_from_gradients(regular_gradients, model, iterations=3000)
+        regular_recon = reconstruct_from_gradients(regular_gradients, model, iterations=1000)
         logger.info("Regular reconstruction completed")
 
         logger.info("Attempting to reconstruct from DP gradients")
-        dp_recon = reconstruct_from_gradients(dp_gradients, model, iterations=3000)
+        dp_recon = reconstruct_from_gradients(dp_gradients, model, iterations=1000)
         logger.info("DP reconstruction completed")
 
         # Step 5: Visualize results - Using the updated client_id and round_num
         logger.info("Creating visualization")
         filepath = visualize_reconstruction_comparison(
-            sample_image,
+            sample_image.squeeze(0),
             regular_recon,
             dp_recon,
             dp_params,
@@ -1880,151 +1853,81 @@ def demonstrate_gradient_inversion(model, sample_image, dp_params, device="cpu",
         return None, None, f"Error: {str(e)}"
 
 
-def reconstruct_from_gradients(gradients, model, iterations=3000, lr=0.01):
+def reconstruct_from_gradients(gradients, model, iterations=1000, lr=0.1):
     """
-    Attempt to reconstruct the input image from gradients with an improved algorithm.
+    Attempt to reconstruct the input image from gradients.
+    This is a simplified gradient inversion attack.
     """
     logger = logging.getLogger("GradientReconstruction")
-    logger.info(f"Starting improved reconstruction from gradients with {iterations} iterations, lr={lr}")
+    logger.info(f"Starting reconstruction from gradients with {iterations} iterations, lr={lr}")
 
     try:
-        # Start with a random image initialized near 0.5 (middle gray) with low variance
-        # This tends to converge better than pure random noise
+        # Start with random noise
         device = next(model.parameters()).device
-        reconstructed = torch.ones(1, 3, 224, 224, device=device) * 0.5 + torch.randn(1, 3, 224, 224,
-                                                                                      device=device) * 0.1
-        reconstructed.requires_grad = True
-        logger.info(f"Created initial image with shape {reconstructed.shape}")
+        reconstructed = torch.randn(1, 3, 224, 224, requires_grad=True, device=device)
+        logger.info(f"Created random noise image with shape {reconstructed.shape}")
 
-        # Use Adam optimizer with cosine learning rate schedule
         optimizer = torch.optim.Adam([reconstructed], lr=lr)
-        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=iterations, eta_min=lr / 10)
-
-        # Set target label
         criterion = torch.nn.CrossEntropyLoss()
         target = torch.tensor([1], device=device)
-
-        # Initialize total variation regularization weight
-        tv_weight = 0.0001  # Start with low TV weight
 
         # Check if we have gradients to reconstruct from
         if not gradients:
             logger.error("No gradients provided for reconstruction")
-            return torch.ones(3, 224, 224, device=device) * 0.1  # Return dark gray instead of black
+            return torch.zeros(3, 224, 224, device=device)
 
         # Number of parameters with gradients
         num_params = sum(1 for name in gradients.keys())
-        if num_params == 0:
-            logger.error("No gradient parameters available")
-            return torch.ones(3, 224, 224, device=device) * 0.1
-
         logger.info(f"Reconstructing from {num_params} gradient parameters")
 
         # For logging progress
         log_steps = max(1, iterations // 10)
-        best_recon = None
-        best_loss = float('inf')
 
-        # Use multi-resolution optimization: start with blurry image, then add details
         for i in range(iterations):
             optimizer.zero_grad()
 
             # Forward pass
             output = model(reconstructed)
+            loss = criterion(output, target)
 
-            # Classification loss
-            class_loss = criterion(output, target)
-
-            # Backward pass to get model gradients
-            class_loss.backward(retain_graph=True)
+            # Backward pass to get gradient
+            loss.backward()
 
             # Calculate gradient matching loss
             grad_diff = 0
             matching_params = 0
-
-            # Match gradients
             for name, param in model.named_parameters():
                 if param.requires_grad and param.grad is not None and name in gradients:
-                    # L2 loss for gradient matching
                     grad_diff += ((param.grad - gradients[name]) ** 2).sum()
                     matching_params += 1
 
             if matching_params == 0:
                 logger.warning("No matching parameters found for gradient reconstruction")
-                return torch.ones(3, 224, 224, device=device) * 0.2  # Return gray instead of black
 
-            # Calculate total variation loss to enforce spatial smoothness
-            # This creates more natural-looking images
-            def total_variation_loss(img):
-                tv_h = ((img[:, :, 1:, :] - img[:, :, :-1, :]).abs()).sum()
-                tv_w = ((img[:, :, :, 1:] - img[:, :, :, :-1]).abs()).sum()
-                return tv_h + tv_w
-
-            tv_loss = total_variation_loss(reconstructed)
-
-            # Adjust TV weight as iterations progress (more smoothness initially, less at the end)
-            current_tv_weight = tv_weight * (1.0 - i / iterations)
-
-            # Add channel correlation to encourage natural images
-            rgb_correlation_loss = 0
-            if i > iterations // 2:  # Only apply in second half of iterations
-                # RGB values in natural images are correlated
-                r, g, b = reconstructed[0, 0], reconstructed[0, 1], reconstructed[0, 2]
-                # Encourage similarity between RGB channels (found in natural images)
-                rgb_correlation_loss = 0.01 * ((r - g).abs().mean() + (r - b).abs().mean() + (g - b).abs().mean())
-
-            # Total loss function
-            total_loss = grad_diff + current_tv_weight * tv_loss + rgb_correlation_loss
-
-            # Add a hint of red tint (specific to retinal images) in the last phase
-            if i > iterations * 0.8:
-                red_channel = reconstructed[:, 0:1, :, :]  # Red channel
-                red_loss = 0.01 * (1.0 - red_channel.mean())  # Encourage brighter red
-                total_loss += red_loss
-
-            # Update the image
-            total_loss.backward()
+            # Update reconstructed image to match gradients
+            grad_diff.backward()
             optimizer.step()
-            scheduler.step()
-
-            # Projection step: keep values in valid range
-            with torch.no_grad():
-                reconstructed.data = torch.clamp(reconstructed.data, 0, 1)
-
-            # Track best reconstruction
-            if grad_diff.item() < best_loss:
-                best_loss = grad_diff.item()
-                best_recon = reconstructed.detach().clone()
 
             # Log progress occasionally
             if i % log_steps == 0 or i == iterations - 1:
-                logger.info(
-                    f"Reconstruction iteration {i + 1}/{iterations}: grad_diff={grad_diff.item():.4f}, total_loss={total_loss.item():.4f}")
-                # Optional - add intermediate visualizations
-                if i % (log_steps * 5) == 0:
-                    with torch.no_grad():
-                        img = reconstructed.squeeze(0).cpu().permute(1, 2, 0).numpy()
-                        logger.info(f"Current image mean: {img.mean():.4f}, min: {img.min():.4f}, max: {img.max():.4f}")
+                logger.info(f"Reconstruction iteration {i + 1}/{iterations}: grad_diff={grad_diff.item():.4f}")
 
-        logger.info(f"Reconstruction complete, final grad_diff={best_loss}")
+        # Normalize and return
+        with torch.no_grad():
+            reconstructed = torch.clamp(reconstructed, 0, 1)
+            logger.info(f"Reconstruction complete, output shape: {reconstructed.squeeze(0).shape}")
 
-        # Return the best reconstruction found
-        if best_recon is not None:
-            logger.info("Returning best reconstruction found during optimization")
-            return best_recon.squeeze(0)
-        else:
-            logger.info("Returning final reconstruction")
-            return reconstructed.squeeze(0)
+        return reconstructed.squeeze(0)
 
     except Exception as e:
         logger.error(f"Error during reconstruction: {e}", exc_info=True)
-        # Return a gray image instead of black to make it clear something was attempted
-        return torch.ones(3, 224, 224, device=device) * 0.2
+        # Return an empty tensor in case of error
+        return torch.zeros(3, 224, 224, device=device)
 
 
 def visualize_reconstruction_comparison(original, regular_recon, dp_recon, dp_params, client_id=None, round_num=None):
     """
-    Visualize the original image and reconstruction attempts with enhanced visualization techniques.
+    Visualize the original image and reconstruction attempts.
 
     Args:
         original: Original image
@@ -2038,7 +1941,7 @@ def visualize_reconstruction_comparison(original, regular_recon, dp_recon, dp_pa
         str: Path to saved visualization
     """
     logger = logging.getLogger(f"VisualizationClient{client_id}")
-    logger.info("Starting enhanced reconstruction visualization")
+    logger.info("Starting reconstruction visualization")
 
     try:
         # Make sure output directory exists
@@ -2054,117 +1957,53 @@ def visualize_reconstruction_comparison(original, regular_recon, dp_recon, dp_pa
 
         logger.info(f"Will save visualization to: {filepath}")
 
-        plt.figure(figsize=(18, 6))
+        plt.figure(figsize=(15, 5))
 
         # Convert tensors to numpy arrays for plotting with proper error checking
         try:
             original_np = original.detach().cpu().permute(1, 2, 0).numpy()
-            logger.info(
-                f"Original image shape: {original_np.shape}, mean: {original_np.mean():.4f}, min: {original_np.min():.4f}, max: {original_np.max():.4f}")
+            logger.info(f"Original image shape: {original_np.shape}")
         except Exception as e:
             logger.error(f"Error converting original image: {e}")
-            original_np = np.ones((224, 224, 3)) * 0.3
+            original_np = np.zeros((224, 224, 3))
 
         try:
             regular_np = regular_recon.detach().cpu().permute(1, 2, 0).numpy()
-            logger.info(
-                f"Regular reconstruction shape: {regular_np.shape}, mean: {regular_np.mean():.4f}, min: {regular_np.min():.4f}, max: {regular_np.max():.4f}")
+            logger.info(f"Regular reconstruction shape: {regular_np.shape}")
         except Exception as e:
             logger.error(f"Error converting regular reconstruction: {e}")
-            regular_np = np.ones((224, 224, 3)) * 0.2
+            regular_np = np.zeros((224, 224, 3))
 
         try:
             dp_np = dp_recon.detach().cpu().permute(1, 2, 0).numpy()
-            logger.info(
-                f"DP reconstruction shape: {dp_np.shape}, mean: {dp_np.mean():.4f}, min: {dp_np.min():.4f}, max: {dp_np.max():.4f}")
+            logger.info(f"DP reconstruction shape: {dp_np.shape}")
         except Exception as e:
             logger.error(f"Error converting DP reconstruction: {e}")
-            dp_np = np.ones((224, 224, 3)) * 0.1
+            dp_np = np.zeros((224, 224, 3))
 
-        # Function to normalize and enhance contrast
-        def enhance_image(img, percentile_low=1, percentile_high=99):
-            # Make a copy to avoid modifying the original
-            enhanced = img.copy()
-
-            # Get the channel-wise percentile values for normalization
-            for c in range(3):
-                p_low = np.percentile(enhanced[:, :, c], percentile_low)
-                p_high = np.percentile(enhanced[:, :, c], percentile_high)
-
-                # Avoid division by zero
-                if p_high > p_low:
-                    enhanced[:, :, c] = np.clip((enhanced[:, :, c] - p_low) / (p_high - p_low), 0, 1)
-
-            return enhanced
-
-        # Enhanced visualization with normalization for better visibility
         # Plot original
         plt.subplot(1, 3, 1)
         plt.imshow(original_np)
-        plt.title("Original Training Image", fontsize=14)
+        plt.title("Original Training Image")
         plt.axis('off')
 
-        # Plot reconstruction without DP (with enhanced contrast)
+        # Plot reconstruction without DP
         plt.subplot(1, 3, 2)
-        # Check if image is all black or very dark
-        if regular_np.mean() < 0.01:
-            logger.warning("Regular reconstruction appears to be too dark, using uniform intensity scaling")
-            # Scale the values to see if there's any pattern
-            scaled_regular = regular_np.copy()
-            if regular_np.max() > regular_np.min():
-                scaled_regular = (regular_np - regular_np.min()) / (regular_np.max() - regular_np.min())
-            plt.imshow(scaled_regular)
-        else:
-            # Apply contrast enhancement
-            enhanced_regular = enhance_image(regular_np)
-            plt.imshow(enhanced_regular)
-
-        plt.title("Reconstruction without DP\n(Enhanced for Visibility)", fontsize=14)
+        plt.imshow(regular_np)
+        plt.title("Reconstruction without DP")
         plt.axis('off')
 
-        # Add histogram of pixel values for non-DP reconstruction in inset
-        hist_ax = plt.axes([0.42, 0.15, 0.1, 0.15])  # [left, bottom, width, height]
-        hist_ax.hist(regular_np.ravel(), bins=50, color='blue', alpha=0.7)
-        hist_ax.set_title("Pixel Distribution", fontsize=8)
-        hist_ax.set_xticks([0, 0.5, 1.0])
-        hist_ax.tick_params(axis='both', which='major', labelsize=8)
-
-        # Plot reconstruction with DP (with enhanced contrast)
+        # Plot reconstruction with DP
         plt.subplot(1, 3, 3)
-        # Check if image is all black or very dark
-        if dp_np.mean() < 0.01:
-            logger.warning("DP reconstruction appears to be too dark, using uniform intensity scaling")
-            # Scale the values to see if there's any pattern
-            scaled_dp = dp_np.copy()
-            if dp_np.max() > dp_np.min():
-                scaled_dp = (dp_np - dp_np.min()) / (dp_np.max() - dp_np.min())
-            plt.imshow(scaled_dp)
-        else:
-            # Apply contrast enhancement
-            enhanced_dp = enhance_image(dp_np)
-            plt.imshow(enhanced_dp)
-
-        plt.title(f"Reconstruction with DP\n(σ={dp_params['noise_multiplier']}, Enhanced for Visibility)", fontsize=14)
+        plt.imshow(dp_np)
+        plt.title(f"Reconstruction with DP\n(σ={dp_params['noise_multiplier']})")
         plt.axis('off')
 
-        # Add histogram of pixel values for DP reconstruction in inset
-        hist_ax = plt.axes([0.77, 0.15, 0.1, 0.15])  # [left, bottom, width, height]
-        hist_ax.hist(dp_np.ravel(), bins=50, color='red', alpha=0.7)
-        hist_ax.set_title("Pixel Distribution", fontsize=8)
-        hist_ax.set_xticks([0, 0.5, 1.0])
-        hist_ax.tick_params(axis='both', which='major', labelsize=8)
-
-        # Add explanation text
-        explanation = "This visualization demonstrates differential privacy (DP) protection against gradient inversion attacks.\n" + \
-                      "The center image attempts to reconstruct the original (left) using only gradients without DP.\n" + \
-                      "The right image shows the same reconstruction attempt with DP noise applied to gradients."
-        plt.figtext(0.5, 0.01, explanation, wrap=True, horizontalalignment='center', fontsize=12)
-
-        plt.tight_layout(rect=[0, 0.07, 1, 0.96])  # Make room for explanation text
+        plt.tight_layout()
 
         # Save with proper error handling
         logger.info(f"Saving visualization to: {filepath}")
-        plt.savefig(filepath, dpi=150)
+        plt.savefig(filepath)
         plt.close()
         logger.info("Visualization saved successfully")
 
