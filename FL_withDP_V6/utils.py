@@ -281,7 +281,6 @@ def load_data(img_dir, labels_path, num_clients=3, batch_size=8, distribution='i
             desired_test_size = max(1, min(desired_test_size, len(full_test_df)))
 
             # Use train_test_split with test_size parameter instead of train_size
-            # We're using test_size as a proportion to select from full_test_df
             try:
                 # Calculate proportion of full_test_df to use (desired_test_size / full_test_df size)
                 test_proportion = min(0.99, desired_test_size / len(full_test_df))
@@ -358,11 +357,56 @@ def load_data(img_dir, labels_path, num_clients=3, batch_size=8, distribution='i
     return client_data
 
 
-# Custom implementation of differential privacy accounting based on analytical moments accountant
+# Improved RDP-based privacy accounting
+def compute_rdp(q, noise_multiplier, steps, orders):
+    """
+    Compute RDP guarantees for subsampled Gaussian mechanism.
+
+    Args:
+        q: Sampling rate (batch_size / dataset_size)
+        noise_multiplier: Noise standard deviation
+        steps: Number of iterations
+        orders: RDP orders to compute
+
+    Returns:
+        List of RDP values at different orders
+    """
+    rdp_values = []
+    for alpha in orders:
+        # For alpha = 1, use a limit formula
+        if alpha == 1:
+            rdp_step = q * (np.exp(1 / noise_multiplier ** 2) - 1)
+            rdp_values.append(rdp_step * steps)
+            continue
+
+        # Use a simplified bound for subsampled Gaussian
+        # Based on https://arxiv.org/pdf/1908.10530.pdf
+        log_term = 0
+        if q > 0:
+            t = np.exp((alpha - 1) / (2 * noise_multiplier ** 2))
+            log_term = np.log((1 - q) + q * t)
+
+        rdp_step = (1 / (alpha - 1)) * log_term
+        rdp_values.append(rdp_step * steps)
+
+    return rdp_values
+
+
+def rdp_to_dp(rdp_values, orders, delta):
+    """Convert RDP to approximate DP guarantee."""
+    epsilon = float('inf')
+
+    for i, alpha in enumerate(orders):
+        if alpha > 1:  # Skip alpha = 1 as it requires different conversion
+            current_epsilon = rdp_values[i] + (np.log(1 / delta) / (alpha - 1))
+            epsilon = min(epsilon, current_epsilon)
+
+    return epsilon
+
+
 def compute_dp_sgd_privacy_budget(noise_multiplier, sample_rate, epochs, delta=1e-5):
     """
-    Compute privacy budget (epsilon) for DP-SGD based on analytical moments accountant method.
-    This implementation provides a practical approximation for epsilon.
+    Compute privacy budget (epsilon) for DP-SGD based on RDP accounting.
 
     Args:
         noise_multiplier (float): Noise multiplier used in DP-SGD
@@ -374,86 +418,29 @@ def compute_dp_sgd_privacy_budget(noise_multiplier, sample_rate, epochs, delta=1
         float: Estimated epsilon value
     """
     # Calculate number of iterations (steps)
-    iterations = max(1, int(epochs / sample_rate))  # Ensure at least 1 iteration
+    steps = max(1, int(epochs / sample_rate))  # Ensure at least 1 iteration
 
-    # Privacy analysis based on the paper "Deep Learning with Differential Privacy"
-    # This is a practical approximation that gives reasonable epsilon values
-    # Lower noise multiplier = higher epsilon = less privacy
-    # More iterations = higher epsilon = less privacy
+    # Orders to evaluate (more orders = tighter bound, but slower)
+    orders = [1] + list(np.arange(1.1, 10.0, 0.1)) + list(np.arange(10, 64, 1))
 
-    # Base coefficient derived from privacy analysis
-    c = 0.5
+    # Compute RDP values
+    rdp_values = compute_rdp(sample_rate, noise_multiplier, steps, orders)
 
-    # Calculate epsilon
-    epsilon = (c * math.sqrt(iterations)) / noise_multiplier
-
-    # Apply sampling amplification (privacy amplification by sampling)
-    # When we only use a fraction of the data in each batch, privacy is improved
-    if sample_rate < 1.0:
-        # Effect is stronger with smaller sampling rates
-        amplification_factor = math.sqrt(sample_rate)
-        epsilon = epsilon * amplification_factor
+    # Convert to (ε, δ)-DP
+    epsilon = rdp_to_dp(rdp_values, orders, delta)
 
     # Ensure epsilon is not too small to be meaningful
-    epsilon = max(epsilon, 0.1)
+    epsilon = max(epsilon, 0.01)
 
     return float(epsilon)
 
 
-# Improved DP-SGD with proper clipping and noise addition
-class DPGradientClipping:
-    """Handler for differentially private gradient clipping and noise addition."""
-
-    def __init__(self, noise_multiplier, max_grad_norm, logger):
-        self.noise_multiplier = noise_multiplier
-        self.max_grad_norm = max_grad_norm
-        self.logger = logger
-
-    def clip_and_add_noise(self, model):
-        """
-        Clip gradients and add calibrated noise for differential privacy.
-
-        Args:
-            model (nn.Module): The model being trained
-
-        Returns:
-            tuple: The original gradients and noisy gradients for visualization
-        """
-        # First, calculate the total gradient norm for trainable parameters
-        total_norm = 0
-        parameters = [p for p in model.parameters() if p.requires_grad]
-        original_grads = []
-
-        for p in parameters:
-            if p.grad is not None:
-                original_grads.append(p.grad.detach().clone())
-                total_norm += p.grad.detach().norm(2).item() ** 2
-
-        total_norm = total_norm ** 0.5
-        scaling_factor = self.max_grad_norm / (total_norm + 1e-12)
-
-        # If the norm is greater than max_grad_norm, scale gradients
-        if scaling_factor < 1.0:
-            for p in parameters:
-                if p.grad is not None:
-                    p.grad.detach().mul_(scaling_factor)
-
-        # Add calibrated Gaussian noise to the gradients
-        noisy_grads = []
-        for p in parameters:
-            if p.grad is not None:
-                clipped_grad = p.grad.detach().clone()
-                noise = torch.randn_like(p.grad) * self.noise_multiplier * self.max_grad_norm / math.sqrt(
-                    len(parameters))
-                p.grad += noise
-                noisy_grads.append(p.grad.detach().clone())
-
-        return original_grads, noisy_grads
-
-
-def train_with_dp(model, train_loader, optimizer, criterion, device, dp_params, logger, epochs=1):
+# Improved DP-SGD with proper clipping and noise addition and FedProx support
+def train_with_dp(model, train_loader, optimizer, criterion, device, dp_params, logger, epochs=1,
+                  global_model_params=None, proximal_mu=0.0):
     """
-    Train a model with improved differential privacy guarantees using proper DP-SGD.
+    Train a model with improved differential privacy guarantees using DP-SGD with microbatching.
+    Supports FedProx regularization when global_model_params is provided.
 
     Args:
         model (nn.Module): Model to train
@@ -464,6 +451,8 @@ def train_with_dp(model, train_loader, optimizer, criterion, device, dp_params, 
         dp_params (dict): DP parameters (noise_multiplier, max_grad_norm)
         logger: Logger
         epochs (int): Number of epochs to train (default: 1)
+        global_model_params (list): Global model parameters for FedProx regularization
+        proximal_mu (float): Proximal term weight for FedProx
 
     Returns:
         tuple: (model, metrics, privacy_metrics, original_gradients, noisy_gradients) - Trained model and data
@@ -483,8 +472,19 @@ def train_with_dp(model, train_loader, optimizer, criterion, device, dp_params, 
     batch_size = next(iter(train_loader))[0].shape[0]
     sample_rate = batch_size / len(train_loader.dataset)
 
-    # Initialize DP gradient handler
-    dp_handler = DPGradientClipping(noise_multiplier, max_grad_norm, logger)
+    # Check if we're using FedProx
+    using_fedprox = global_model_params is not None and proximal_mu > 0
+    if using_fedprox:
+        logger.info(f"Using FedProx regularization with mu={proximal_mu}")
+
+        # Convert global model parameters to tensors and load into a temporary model for proximal term
+        global_model = create_model().to(device)
+        params_dict = zip(global_model.state_dict().keys(), global_model_params)
+        global_model.load_state_dict(OrderedDict({k: torch.tensor(v) for k, v in params_dict}), strict=True)
+
+        # Freeze global model to save memory
+        for param in global_model.parameters():
+            param.requires_grad = False
 
     # Log DP parameters
     logger.info(
@@ -497,48 +497,125 @@ def train_with_dp(model, train_loader, optimizer, criterion, device, dp_params, 
     original_gradients = []
     noisy_gradients = []
 
-    # Training loop with proper DP-SGD for multiple epochs
+    # Training loop with improved DP-SGD using microbatching for memory efficiency
     for epoch in range(epochs):
         logger.info(f"Starting epoch {epoch + 1}/{epochs}")
 
         for batch_idx, (data, target) in enumerate(train_loader):
             data, target = data.to(device), target.to(device)
 
+            # Get batch size for this batch
+            current_batch_size = data.size(0)
+
             # Clear previous gradients
             optimizer.zero_grad()
 
-            # Forward pass
-            output = model(data)
-            loss = criterion(output, target)
+            # Store per-sample gradient norms for clipping
+            per_sample_norms = []
+            per_sample_grads = []
 
-            # Backward pass
-            loss.backward()
+            # Phase 1: Calculate per-sample gradients and their norms
+            for sample_idx in range(current_batch_size):
+                # Clear gradients for this sample
+                optimizer.zero_grad()
 
-            # Apply DP gradient clipping and noise addition
+                # Get single sample
+                sample_data = data[sample_idx:sample_idx + 1]
+                sample_target = target[sample_idx:sample_idx + 1]
+
+                # Forward pass
+                output = model(sample_data)
+                loss = criterion(output, sample_target)
+
+                # Add FedProx regularization if enabled
+                if using_fedprox:
+                    # Calculate proximal term (L2 distance between local and global model parameters)
+                    proximal_term = 0.0
+                    for local_param, global_param in zip(model.parameters(), global_model.parameters()):
+                        if local_param.requires_grad:
+                            proximal_term += torch.sum((local_param - global_param) ** 2)
+
+                    # Add proximal term to loss
+                    loss += (proximal_mu / 2) * proximal_term
+
+                # Backward pass
+                loss.backward()
+
+                # Calculate gradient norm
+                grad_norm = 0
+                sample_grads = []
+                for p in model.parameters():
+                    if p.requires_grad and p.grad is not None:
+                        sample_grads.append(p.grad.detach().clone())
+                        grad_norm += p.grad.detach().norm(2).item() ** 2
+
+                grad_norm = grad_norm ** 0.5
+                per_sample_norms.append(grad_norm)
+                per_sample_grads.append(sample_grads)
+
+            # Phase 2: Clip and aggregate gradients
+            optimizer.zero_grad()
+
+            # Save original gradients from first batch of last epoch for visualization
             if batch_idx == 0 and epoch == epochs - 1:
-                # Save gradients for visualization for the first batch of last epoch
-                orig_grads, noisy_grads = dp_handler.clip_and_add_noise(model)
-                original_gradients = orig_grads
-                noisy_gradients = noisy_grads
-            else:
-                dp_handler.clip_and_add_noise(model)
+                first_sample_idx = 0
+                original_gradients = per_sample_grads[first_sample_idx]
 
-            # Update weights
+            # Clip and aggregate gradients
+            for sample_idx in range(current_batch_size):
+                grad_norm = per_sample_norms[sample_idx]
+                scale = min(1.0, max_grad_norm / (grad_norm + 1e-12))
+
+                # Scale and accumulate gradients
+                for i, p in enumerate(model.parameters()):
+                    if p.requires_grad and i < len(per_sample_grads[sample_idx]):
+                        sample_grad = per_sample_grads[sample_idx][i]
+                        if p.grad is None:
+                            p.grad = torch.zeros_like(sample_grad)
+                        p.grad += sample_grad * scale / current_batch_size
+
+            # Phase 3: Add noise to accumulated gradients
+            for p in model.parameters():
+                if p.requires_grad and p.grad is not None:
+                    noise = torch.randn_like(p.grad) * noise_multiplier * max_grad_norm / math.sqrt(current_batch_size)
+                    p.grad += noise
+
+            # Save noisy gradients from first batch of last epoch for visualization
+            if batch_idx == 0 and epoch == epochs - 1:
+                noisy_gradients = []
+                for p in model.parameters():
+                    if p.requires_grad and p.grad is not None:
+                        noisy_gradients.append(p.grad.detach().clone())
+
+            # Update model parameters
             optimizer.step()
 
-            # Collect metrics
-            running_loss += loss.item()
-            _, predicted = output.max(1)
-            total += target.size(0)
-            correct += predicted.eq(target).sum().item()
+            # Calculate metrics
+            with torch.no_grad():
+                output = model(data)
+                loss = criterion(output, target).item()
 
-            all_targets.extend(target.cpu().numpy())
-            all_predictions.extend(predicted.cpu().numpy())
+                # Add FedProx regularization to loss calculation for reporting
+                if using_fedprox:
+                    proximal_term = 0.0
+                    for local_param, global_param in zip(model.parameters(), global_model.parameters()):
+                        if local_param.requires_grad:
+                            proximal_term += torch.sum((local_param - global_param) ** 2)
+                    loss += (proximal_mu / 2) * proximal_term.item()
 
-            # Log progress for every 5th batch
+                running_loss += loss
+
+                _, predicted = output.max(1)
+                total += target.size(0)
+                correct += predicted.eq(target).sum().item()
+
+                all_targets.extend(target.cpu().numpy())
+                all_predictions.extend(predicted.cpu().numpy())
+
+            # Log progress
             if batch_idx % 5 == 0:
                 logger.info(
-                    f"Epoch {epoch + 1}/{epochs} - Batch {batch_idx}/{len(train_loader)} - Loss: {loss.item():.4f}"
+                    f"Epoch {epoch + 1}/{epochs} - Batch {batch_idx}/{len(train_loader)} - Loss: {loss:.4f}"
                 )
 
     # Calculate final metrics
@@ -556,7 +633,7 @@ def train_with_dp(model, train_loader, optimizer, criterion, device, dp_params, 
         "y_pred": all_predictions
     }
 
-    # Calculate privacy metrics using our custom implementation
+    # Calculate privacy metrics using the improved RDP accounting
     epsilon = compute_dp_sgd_privacy_budget(noise_multiplier, sample_rate, epochs, delta)
     privacy_metrics = {
         "epsilon": epsilon,
@@ -1148,6 +1225,40 @@ def plot_per_client_privacy_consumption(client_ids, client_epsilons, round_num):
     return filepath
 
 
+def simulate_membership_inference_risk(epsilon):
+    """
+    Calculate the theoretical risk of a membership inference attack based on epsilon.
+    Uses a simplified model from the DP literature.
+
+    Args:
+        epsilon (float): Privacy budget (epsilon)
+
+    Returns:
+        float: Theoretical upper bound on attack success rate (0-1)
+    """
+    # Using a bound from DP theory: P(success) ≤ 0.5 + (e^ε - 1)/(e^ε + 1)
+    # This is a standard result for distinguishing advantage in differential privacy
+    success_rate = 0.5 + (np.exp(epsilon) - 1) / (np.exp(epsilon) + 1)
+    return min(success_rate, 1.0)  # Cap at 1.0
+
+
+def calculate_theoretical_leak_probability(epsilon):
+    """
+    Calculate a theoretical probability of information leakage based on epsilon.
+    Based on standard DP guarantees.
+
+    Args:
+        epsilon (float): Privacy budget (epsilon)
+
+    Returns:
+        float: Theoretical probability of information leakage (0-1)
+    """
+    # Using the standard DP definition: P(Mechanism(D1) ∈ S) ≤ e^ε * P(Mechanism(D2) ∈ S)
+    # We can derive a simple measure of distinguishability: 1 - 1/e^ε
+    leakage_prob = 1 - (1 / np.exp(epsilon))
+    return min(leakage_prob, 1.0)  # Cap at 1.0
+
+
 def plot_membership_inference_risk(epsilon_values, membership_inference_risks):
     """
     Visualize how differential privacy protects against membership inference attacks.
@@ -1190,40 +1301,6 @@ def plot_membership_inference_risk(epsilon_values, membership_inference_risks):
     plt.close()
 
     return filepath
-
-
-def simulate_membership_inference_risk(epsilon):
-    """
-    Calculate the theoretical risk of a membership inference attack based on epsilon.
-    Uses a simplified model from the DP literature.
-
-    Args:
-        epsilon (float): Privacy budget (epsilon)
-
-    Returns:
-        float: Theoretical upper bound on attack success rate (0-1)
-    """
-    # Using a bound from DP theory: P(success) ≤ 0.5 + (e^ε - 1)/(e^ε + 1)
-    # This is a standard result for distinguishing advantage in differential privacy
-    success_rate = 0.5 + (np.exp(epsilon) - 1) / (np.exp(epsilon) + 1)
-    return min(success_rate, 1.0)  # Cap at 1.0
-
-
-def calculate_theoretical_leak_probability(epsilon):
-    """
-    Calculate a theoretical probability of information leakage based on epsilon.
-    Based on standard DP guarantees.
-
-    Args:
-        epsilon (float): Privacy budget (epsilon)
-
-    Returns:
-        float: Theoretical probability of information leakage (0-1)
-    """
-    # Using the standard DP definition: P(Mechanism(D1) ∈ S) ≤ e^ε * P(Mechanism(D2) ∈ S)
-    # We can derive a simple measure of distinguishability: 1 - 1/e^ε
-    leakage_prob = 1 - (1 / np.exp(epsilon))
-    return min(leakage_prob, 1.0)  # Cap at 1.0
 
 
 def plot_privacy_leakage_reduction(epsilons, leak_probabilities):
@@ -1623,3 +1700,483 @@ def visualize_attack_risk_reduction(noise_multipliers, delta=1e-5):
     plt.close()
 
     return filepath
+
+
+# Add function to compare old and new privacy accounting
+def plot_privacy_accounting_comparison():
+    """
+    Compare the new RDP-based privacy accounting with the previous simplified approach.
+    """
+    os.makedirs("./visualizations/privacy_analysis", exist_ok=True)
+
+    noise_multipliers = np.linspace(0.5, 3.0, 10)
+    sample_rate = 0.01
+    epochs = 1
+
+    # Old method epsilon calculation
+    def compute_simple_dp_bound(noise_multiplier, sample_rate, epochs):
+        iterations = max(1, int(epochs / sample_rate))
+        c = 0.5
+        epsilon = (c * math.sqrt(iterations)) / noise_multiplier
+        if sample_rate < 1.0:
+            epsilon = epsilon * math.sqrt(sample_rate)
+        return max(epsilon, 0.1)
+
+    # Calculate epsilons using both methods
+    old_epsilons = [compute_simple_dp_bound(nm, sample_rate, epochs) for nm in noise_multipliers]
+    new_epsilons = [compute_dp_sgd_privacy_budget(nm, sample_rate, epochs) for nm in noise_multipliers]
+
+    # Create comparison plot
+    plt.figure(figsize=(10, 6))
+    plt.plot(noise_multipliers, old_epsilons, 'r--', linewidth=2, markersize=8,
+             label='Previous Approach (Simplified Bound)')
+    plt.plot(noise_multipliers, new_epsilons, 'b-', linewidth=2, markersize=8,
+             label='New Approach (RDP-based Bound)')
+
+    plt.title('Privacy Accounting Method Comparison', fontsize=14)
+    plt.xlabel('Noise Multiplier (σ)', fontsize=12)
+    plt.ylabel('Privacy Budget (ε)', fontsize=12)
+    plt.grid(True, linestyle='--', alpha=0.7)
+    plt.legend()
+
+    filepath = "./visualizations/privacy_analysis/privacy_accounting_comparison.png"
+    plt.savefig(filepath)
+    plt.close()
+
+    return filepath
+
+
+def demonstrate_gradient_inversion(model, sample_image, dp_params, device="cpu", client_id=None, round_num=None):
+    """
+    Demonstrate how DP prevents gradient inversion attacks by comparing
+    reconstruction attempts on protected vs. unprotected gradients.
+
+    Args:
+        model: The model being trained
+        sample_image: An original image from the dataset
+        dp_params: DP parameters (noise_multiplier, max_grad_norm)
+        device: Computing device
+        client_id: Client ID for visualization
+        round_num: Round number for visualization
+
+    Returns:
+        Visualization of original and reconstructed images
+    """
+    # Set up logging
+    logger = logging.getLogger(f"GradientInversion_Client{client_id}")
+
+    # Create directories for visualizations
+    vis_dir = "./visualizations/gradient_reconstruction"
+    os.makedirs(vis_dir, exist_ok=True)
+    logger.info(f"Created visualization directory: {vis_dir}")
+
+    try:
+        # Step 1: Prepare sample image
+        logger.info(f"Preparing sample image (shape before: {sample_image.shape})")
+        sample_image = sample_image.to(device)
+
+        # Create a copy for gradient computation to avoid modifying the original
+        input_image = sample_image.clone().detach().unsqueeze(0)  # Add batch dimension
+        input_image.requires_grad = True
+        logger.info(f"Input image shape after preparation: {input_image.shape}")
+
+        # Step 2: Compute regular gradients (no DP)
+        logger.info("Computing regular gradients (no DP)")
+        criterion = torch.nn.CrossEntropyLoss()
+        model.zero_grad()
+        output = model(input_image)
+
+        # Check model output
+        logger.info(f"Model output shape: {output.shape}, values: {output.detach().cpu().numpy()}")
+
+        # Use model's prediction as target for more realistic gradient
+        _, predicted = output.max(1)
+        target = predicted.clone()  # Use the model's own prediction
+        logger.info(f"Using target label: {target.item()}")
+
+        loss = criterion(output, target)
+        loss.backward()
+
+        # Create copies of gradients before zeroing them
+        regular_gradients = {}
+        trainable_params = 0
+        for name, param in model.named_parameters():
+            if param.requires_grad and param.grad is not None:
+                regular_gradients[name] = param.grad.clone()
+                trainable_params += 1
+
+        logger.info(f"Collected regular gradients for {trainable_params} trainable parameters")
+
+        # Log some basic statistics about the gradients
+        for name, grad in regular_gradients.items():
+            if 'fc' in name:  # Focus on fully connected layers where most information is
+                logger.info(
+                    f"Regular gradient '{name}': shape={grad.shape}, mean={grad.mean().item():.6f}, std={grad.std().item():.6f}, norm={grad.norm().item():.6f}")
+
+        # Step 3: Compute DP-protected gradients
+        logger.info("Computing DP-protected gradients")
+        model.zero_grad()
+        output = model(input_image)
+        loss = criterion(output, target)
+        loss.backward()
+
+        # Apply clipping
+        total_norm = 0
+        for param in model.parameters():
+            if param.requires_grad and param.grad is not None:
+                total_norm += param.grad.norm(2).item() ** 2
+        total_norm = total_norm ** 0.5
+        scaling_factor = min(1.0, dp_params["max_grad_norm"] / (total_norm + 1e-12))
+        logger.info(f"Gradient norm: {total_norm}, scaling factor: {scaling_factor}")
+
+        # Add noise
+        dp_gradients = {}
+        for name, param in model.named_parameters():
+            if param.requires_grad and param.grad is not None:
+                clipped_grad = param.grad * scaling_factor
+                # Use consistent random seed for reproducibility
+                torch.manual_seed(42)
+                noise = torch.randn_like(param.grad) * dp_params["noise_multiplier"] * dp_params["max_grad_norm"]
+                dp_gradients[name] = clipped_grad + noise
+
+                # Log statistics for DP gradients
+                if 'fc' in name:
+                    logger.info(
+                        f"DP gradient '{name}': mean={dp_gradients[name].mean().item():.6f}, std={dp_gradients[name].std().item():.6f}, norm={dp_gradients[name].norm().item():.6f}")
+
+        logger.info(f"Created DP-protected gradients with noise multiplier: {dp_params['noise_multiplier']}")
+
+        # Check if gradient norms are reasonable
+        reg_norm = sum(g.norm().item() for g in regular_gradients.values())
+        dp_norm = sum(g.norm().item() for g in dp_gradients.values())
+        logger.info(f"Total gradient norm - Regular: {reg_norm:.4f}, DP: {dp_norm:.4f}")
+
+        # Step 4: Attempt reconstruction from both gradient types with more iterations
+        logger.info("Attempting to reconstruct from regular gradients")
+        regular_recon = reconstruct_from_gradients(regular_gradients, model, iterations=3000)
+        logger.info("Regular reconstruction completed")
+
+        logger.info("Attempting to reconstruct from DP gradients")
+        dp_recon = reconstruct_from_gradients(dp_gradients, model, iterations=3000)
+        logger.info("DP reconstruction completed")
+
+        # Step 5: Visualize results - Using the updated client_id and round_num
+        logger.info("Creating visualization")
+        filepath = visualize_reconstruction_comparison(
+            sample_image,
+            regular_recon,
+            dp_recon,
+            dp_params,
+            client_id=client_id,
+            round_num=round_num
+        )
+
+        logger.info(f"Visualization saved to: {filepath}")
+        return regular_recon, dp_recon, filepath
+
+    except Exception as e:
+        logger.error(f"Error in gradient inversion demonstration: {e}", exc_info=True)
+        # Return a more informative error
+        return None, None, f"Error: {str(e)}"
+
+
+def reconstruct_from_gradients(gradients, model, iterations=3000, lr=0.01):
+    """
+    Attempt to reconstruct the input image from gradients with an improved algorithm.
+    """
+    logger = logging.getLogger("GradientReconstruction")
+    logger.info(f"Starting improved reconstruction from gradients with {iterations} iterations, lr={lr}")
+
+    try:
+        # Start with a random image initialized near 0.5 (middle gray) with low variance
+        # This tends to converge better than pure random noise
+        device = next(model.parameters()).device
+        reconstructed = torch.ones(1, 3, 224, 224, device=device) * 0.5 + torch.randn(1, 3, 224, 224,
+                                                                                      device=device) * 0.1
+        reconstructed.requires_grad = True
+        logger.info(f"Created initial image with shape {reconstructed.shape}")
+
+        # Use Adam optimizer with cosine learning rate schedule
+        optimizer = torch.optim.Adam([reconstructed], lr=lr)
+        scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=iterations, eta_min=lr / 10)
+
+        # Set target label
+        criterion = torch.nn.CrossEntropyLoss()
+        target = torch.tensor([1], device=device)
+
+        # Initialize total variation regularization weight
+        tv_weight = 0.0001  # Start with low TV weight
+
+        # Check if we have gradients to reconstruct from
+        if not gradients:
+            logger.error("No gradients provided for reconstruction")
+            return torch.ones(3, 224, 224, device=device) * 0.1  # Return dark gray instead of black
+
+        # Number of parameters with gradients
+        num_params = sum(1 for name in gradients.keys())
+        if num_params == 0:
+            logger.error("No gradient parameters available")
+            return torch.ones(3, 224, 224, device=device) * 0.1
+
+        logger.info(f"Reconstructing from {num_params} gradient parameters")
+
+        # For logging progress
+        log_steps = max(1, iterations // 10)
+        best_recon = None
+        best_loss = float('inf')
+
+        # Use multi-resolution optimization: start with blurry image, then add details
+        for i in range(iterations):
+            optimizer.zero_grad()
+
+            # Forward pass
+            output = model(reconstructed)
+
+            # Classification loss
+            class_loss = criterion(output, target)
+
+            # Backward pass to get model gradients
+            class_loss.backward(retain_graph=True)
+
+            # Calculate gradient matching loss
+            grad_diff = 0
+            matching_params = 0
+
+            # Match gradients
+            for name, param in model.named_parameters():
+                if param.requires_grad and param.grad is not None and name in gradients:
+                    # L2 loss for gradient matching
+                    grad_diff += ((param.grad - gradients[name]) ** 2).sum()
+                    matching_params += 1
+
+            if matching_params == 0:
+                logger.warning("No matching parameters found for gradient reconstruction")
+                return torch.ones(3, 224, 224, device=device) * 0.2  # Return gray instead of black
+
+            # Calculate total variation loss to enforce spatial smoothness
+            # This creates more natural-looking images
+            def total_variation_loss(img):
+                tv_h = ((img[:, :, 1:, :] - img[:, :, :-1, :]).abs()).sum()
+                tv_w = ((img[:, :, :, 1:] - img[:, :, :, :-1]).abs()).sum()
+                return tv_h + tv_w
+
+            tv_loss = total_variation_loss(reconstructed)
+
+            # Adjust TV weight as iterations progress (more smoothness initially, less at the end)
+            current_tv_weight = tv_weight * (1.0 - i / iterations)
+
+            # Add channel correlation to encourage natural images
+            rgb_correlation_loss = 0
+            if i > iterations // 2:  # Only apply in second half of iterations
+                # RGB values in natural images are correlated
+                r, g, b = reconstructed[0, 0], reconstructed[0, 1], reconstructed[0, 2]
+                # Encourage similarity between RGB channels (found in natural images)
+                rgb_correlation_loss = 0.01 * ((r - g).abs().mean() + (r - b).abs().mean() + (g - b).abs().mean())
+
+            # Total loss function
+            total_loss = grad_diff + current_tv_weight * tv_loss + rgb_correlation_loss
+
+            # Add a hint of red tint (specific to retinal images) in the last phase
+            if i > iterations * 0.8:
+                red_channel = reconstructed[:, 0:1, :, :]  # Red channel
+                red_loss = 0.01 * (1.0 - red_channel.mean())  # Encourage brighter red
+                total_loss += red_loss
+
+            # Update the image
+            total_loss.backward()
+            optimizer.step()
+            scheduler.step()
+
+            # Projection step: keep values in valid range
+            with torch.no_grad():
+                reconstructed.data = torch.clamp(reconstructed.data, 0, 1)
+
+            # Track best reconstruction
+            if grad_diff.item() < best_loss:
+                best_loss = grad_diff.item()
+                best_recon = reconstructed.detach().clone()
+
+            # Log progress occasionally
+            if i % log_steps == 0 or i == iterations - 1:
+                logger.info(
+                    f"Reconstruction iteration {i + 1}/{iterations}: grad_diff={grad_diff.item():.4f}, total_loss={total_loss.item():.4f}")
+                # Optional - add intermediate visualizations
+                if i % (log_steps * 5) == 0:
+                    with torch.no_grad():
+                        img = reconstructed.squeeze(0).cpu().permute(1, 2, 0).numpy()
+                        logger.info(f"Current image mean: {img.mean():.4f}, min: {img.min():.4f}, max: {img.max():.4f}")
+
+        logger.info(f"Reconstruction complete, final grad_diff={best_loss}")
+
+        # Return the best reconstruction found
+        if best_recon is not None:
+            logger.info("Returning best reconstruction found during optimization")
+            return best_recon.squeeze(0)
+        else:
+            logger.info("Returning final reconstruction")
+            return reconstructed.squeeze(0)
+
+    except Exception as e:
+        logger.error(f"Error during reconstruction: {e}", exc_info=True)
+        # Return a gray image instead of black to make it clear something was attempted
+        return torch.ones(3, 224, 224, device=device) * 0.2
+
+
+def visualize_reconstruction_comparison(original, regular_recon, dp_recon, dp_params, client_id=None, round_num=None):
+    """
+    Visualize the original image and reconstruction attempts with enhanced visualization techniques.
+
+    Args:
+        original: Original image
+        regular_recon: Reconstruction without DP
+        dp_recon: Reconstruction with DP
+        dp_params: DP parameters
+        client_id: Client ID for visualization
+        round_num: Round number for visualization
+
+    Returns:
+        str: Path to saved visualization
+    """
+    logger = logging.getLogger(f"VisualizationClient{client_id}")
+    logger.info("Starting enhanced reconstruction visualization")
+
+    try:
+        # Make sure output directory exists
+        vis_dir = "./visualizations/gradient_reconstruction"
+        os.makedirs(vis_dir, exist_ok=True)
+        logger.info(f"Visualization directory: {vis_dir}")
+
+        # Create unique filepath using client ID and round number if provided
+        if client_id is not None and round_num is not None:
+            filepath = f"{vis_dir}/client_{client_id}_round_{round_num}_gradient_inversion_protection.png"
+        else:
+            filepath = f"{vis_dir}/gradient_inversion_protection.png"
+
+        logger.info(f"Will save visualization to: {filepath}")
+
+        plt.figure(figsize=(18, 6))
+
+        # Convert tensors to numpy arrays for plotting with proper error checking
+        try:
+            original_np = original.detach().cpu().permute(1, 2, 0).numpy()
+            logger.info(
+                f"Original image shape: {original_np.shape}, mean: {original_np.mean():.4f}, min: {original_np.min():.4f}, max: {original_np.max():.4f}")
+        except Exception as e:
+            logger.error(f"Error converting original image: {e}")
+            original_np = np.ones((224, 224, 3)) * 0.3
+
+        try:
+            regular_np = regular_recon.detach().cpu().permute(1, 2, 0).numpy()
+            logger.info(
+                f"Regular reconstruction shape: {regular_np.shape}, mean: {regular_np.mean():.4f}, min: {regular_np.min():.4f}, max: {regular_np.max():.4f}")
+        except Exception as e:
+            logger.error(f"Error converting regular reconstruction: {e}")
+            regular_np = np.ones((224, 224, 3)) * 0.2
+
+        try:
+            dp_np = dp_recon.detach().cpu().permute(1, 2, 0).numpy()
+            logger.info(
+                f"DP reconstruction shape: {dp_np.shape}, mean: {dp_np.mean():.4f}, min: {dp_np.min():.4f}, max: {dp_np.max():.4f}")
+        except Exception as e:
+            logger.error(f"Error converting DP reconstruction: {e}")
+            dp_np = np.ones((224, 224, 3)) * 0.1
+
+        # Function to normalize and enhance contrast
+        def enhance_image(img, percentile_low=1, percentile_high=99):
+            # Make a copy to avoid modifying the original
+            enhanced = img.copy()
+
+            # Get the channel-wise percentile values for normalization
+            for c in range(3):
+                p_low = np.percentile(enhanced[:, :, c], percentile_low)
+                p_high = np.percentile(enhanced[:, :, c], percentile_high)
+
+                # Avoid division by zero
+                if p_high > p_low:
+                    enhanced[:, :, c] = np.clip((enhanced[:, :, c] - p_low) / (p_high - p_low), 0, 1)
+
+            return enhanced
+
+        # Enhanced visualization with normalization for better visibility
+        # Plot original
+        plt.subplot(1, 3, 1)
+        plt.imshow(original_np)
+        plt.title("Original Training Image", fontsize=14)
+        plt.axis('off')
+
+        # Plot reconstruction without DP (with enhanced contrast)
+        plt.subplot(1, 3, 2)
+        # Check if image is all black or very dark
+        if regular_np.mean() < 0.01:
+            logger.warning("Regular reconstruction appears to be too dark, using uniform intensity scaling")
+            # Scale the values to see if there's any pattern
+            scaled_regular = regular_np.copy()
+            if regular_np.max() > regular_np.min():
+                scaled_regular = (regular_np - regular_np.min()) / (regular_np.max() - regular_np.min())
+            plt.imshow(scaled_regular)
+        else:
+            # Apply contrast enhancement
+            enhanced_regular = enhance_image(regular_np)
+            plt.imshow(enhanced_regular)
+
+        plt.title("Reconstruction without DP\n(Enhanced for Visibility)", fontsize=14)
+        plt.axis('off')
+
+        # Add histogram of pixel values for non-DP reconstruction in inset
+        hist_ax = plt.axes([0.42, 0.15, 0.1, 0.15])  # [left, bottom, width, height]
+        hist_ax.hist(regular_np.ravel(), bins=50, color='blue', alpha=0.7)
+        hist_ax.set_title("Pixel Distribution", fontsize=8)
+        hist_ax.set_xticks([0, 0.5, 1.0])
+        hist_ax.tick_params(axis='both', which='major', labelsize=8)
+
+        # Plot reconstruction with DP (with enhanced contrast)
+        plt.subplot(1, 3, 3)
+        # Check if image is all black or very dark
+        if dp_np.mean() < 0.01:
+            logger.warning("DP reconstruction appears to be too dark, using uniform intensity scaling")
+            # Scale the values to see if there's any pattern
+            scaled_dp = dp_np.copy()
+            if dp_np.max() > dp_np.min():
+                scaled_dp = (dp_np - dp_np.min()) / (dp_np.max() - dp_np.min())
+            plt.imshow(scaled_dp)
+        else:
+            # Apply contrast enhancement
+            enhanced_dp = enhance_image(dp_np)
+            plt.imshow(enhanced_dp)
+
+        plt.title(f"Reconstruction with DP\n(σ={dp_params['noise_multiplier']}, Enhanced for Visibility)", fontsize=14)
+        plt.axis('off')
+
+        # Add histogram of pixel values for DP reconstruction in inset
+        hist_ax = plt.axes([0.77, 0.15, 0.1, 0.15])  # [left, bottom, width, height]
+        hist_ax.hist(dp_np.ravel(), bins=50, color='red', alpha=0.7)
+        hist_ax.set_title("Pixel Distribution", fontsize=8)
+        hist_ax.set_xticks([0, 0.5, 1.0])
+        hist_ax.tick_params(axis='both', which='major', labelsize=8)
+
+        # Add explanation text
+        explanation = "This visualization demonstrates differential privacy (DP) protection against gradient inversion attacks.\n" + \
+                      "The center image attempts to reconstruct the original (left) using only gradients without DP.\n" + \
+                      "The right image shows the same reconstruction attempt with DP noise applied to gradients."
+        plt.figtext(0.5, 0.01, explanation, wrap=True, horizontalalignment='center', fontsize=12)
+
+        plt.tight_layout(rect=[0, 0.07, 1, 0.96])  # Make room for explanation text
+
+        # Save with proper error handling
+        logger.info(f"Saving visualization to: {filepath}")
+        plt.savefig(filepath, dpi=150)
+        plt.close()
+        logger.info("Visualization saved successfully")
+
+        # Verify the file was actually created
+        if os.path.exists(filepath):
+            file_size = os.path.getsize(filepath)
+            logger.info(f"File created successfully: {filepath} (size: {file_size} bytes)")
+        else:
+            logger.error(f"File was not created: {filepath}")
+
+        return filepath
+
+    except Exception as e:
+        logger.error(f"Error during visualization: {e}", exc_info=True)
+        return f"Error creating visualization: {str(e)}"
