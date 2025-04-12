@@ -426,10 +426,10 @@ if __name__ == "__main__":
         description='Feature-Specific Differential Privacy Federated Learning for Diabetic Retinopathy Diagnosis'
     )
     parser.add_argument('--num_clients', type=int, default=3, help='Number of clients to simulate')
-    parser.add_argument('--num_rounds', type=int, default=2, help='Number of federated learning rounds')
+    parser.add_argument('--num_rounds', type=int, default=5, help='Number of federated learning rounds')
     parser.add_argument('--epochs', type=int, default=1, help='Number of epochs per round')
     parser.add_argument('--noise_multiplier', type=float, default=0.8, help='Noise multiplier for DP')
-    parser.add_argument('--max_grad_norm', type=float, default=1.0, help='Maximum gradient norm for clipping')
+    parser.add_argument('--max_grad_norm', type=float, default=1, help='Maximum gradient norm for clipping')
     parser.add_argument('--delta', type=float, default=1e-5,
                         help='Delta parameter for differential privacy (probability of privacy guarantee breaking)')
     parser.add_argument('--distribution', type=str, default='iid', choices=['iid', 'non_iid'],
@@ -447,9 +447,9 @@ if __name__ == "__main__":
     parser.add_argument('--model_name', type=str, default='resnet18',
                         choices=['resnet18', 'resnet34', 'resnet50', 'densenet121', 'densenet169', 'densenet201'],
                         help='Specific model name within the architecture type')
-    parser.add_argument('--img_dir', type=str, default='D:/FYP_Data/combined_images',
+    parser.add_argument('--img_dir', type=str, default='E:/IRP_dataset_new/IRP_Final_Images',
                         help='Directory containing the retinopathy images')
-    parser.add_argument('--labels_path', type=str, default='D:/FYP_Data/cleaned_valid_image_labels.csv',
+    parser.add_argument('--labels_path', type=str, default='FL_LABELS_PATH", "E:/IRP_dataset_new/IRP_Final_Labels.csv',
                         help='Path to CSV file with image labels')
     args = parser.parse_args()
 

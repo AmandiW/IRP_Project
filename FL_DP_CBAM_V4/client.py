@@ -20,7 +20,7 @@ from utils import (
     plot_feature_specific_privacy_impact,
     visualize_feature_importance_heatmap,
     visualize_privacy_preservation_with_reconstruction,
-    perform_membership_inference_attack
+    perform_membership_inference_attack, FocalLoss
 )
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
@@ -68,12 +68,12 @@ class RetinopathyClient(fl.client.NumPyClient):
             num_classes=model_config.get("num_classes", 2)
         ).to(self.device)
 
-        self.criterion = torch.nn.CrossEntropyLoss()
+        self.criterion = FocalLoss(alpha=0.25, gamma=2.0)
 
         # Get only trainable parameters for optimizer
         self.optimizer = torch.optim.Adam(
             [p for p in self.model.parameters() if p.requires_grad],
-            lr=0.0001
+            lr=0.0005
         )
 
         # Differential privacy parameters
@@ -154,9 +154,11 @@ class RetinopathyClient(fl.client.NumPyClient):
 
                 if hasattr(self.model.backbone, 'layer3'):
                     # Make only the last block of layer3 trainable
-                    for name, param in self.model.backbone.layer3.named_parameters():
-                        if '1.' in name:  # Last block in layer3
-                            param.requires_grad = True
+                    for param in self.model.backbone.layer3.parameters():
+                        param.requires_grad = True
+                    # for name, param in self.model.backbone.layer3.named_parameters():
+                    #     if '1.' in name:  # Last block in layer3
+                    #         param.requires_grad = True
 
             elif hasattr(self.model.backbone, 'classifier'):
                 # For DenseNet
@@ -562,8 +564,8 @@ def start_client(client_id, model_config=None, dp_params=None):
         from utils import load_data
 
         # Use a configurable path for data loading, with fallback to default path
-        img_dir = os.environ.get("FL_IMG_DIR", "D:/FYP_Data/combined_images")
-        labels_path = os.environ.get("FL_LABELS_PATH", "D:/FYP_Data/cleaned_valid_image_labels.csv")
+        img_dir = os.environ.get("FL_IMG_DIR", "E:/IRP_dataset_new/IRP_Final_Images")
+        labels_path = os.environ.get("FL_LABELS_PATH", "E:/IRP_dataset_new/IRP_Final_Labels.csv")
 
         client_data = load_data(
             img_dir=img_dir,
