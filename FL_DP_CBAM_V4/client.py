@@ -73,7 +73,7 @@ class RetinopathyClient(fl.client.NumPyClient):
         # Get only trainable parameters for optimizer
         self.optimizer = torch.optim.Adam(
             [p for p in self.model.parameters() if p.requires_grad],
-            lr=0.0005
+            lr=0.001
         )
 
         # Differential privacy parameters

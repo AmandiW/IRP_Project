@@ -465,6 +465,31 @@ class CBAMTransition(nn.Sequential):
         return super(CBAMTransition, self).forward(x)
 
 
+
+class _CustomDenseBlock(nn.Module):
+    def __init__(self, layers):
+        super(_CustomDenseBlock, self).__init__()
+        self.layers = nn.ModuleList(layers)
+        self.cbam = None  # Will be set after initialization
+
+    def forward(self, x):
+        features = [x]
+
+        for layer in self.layers:
+            new_features = layer(torch.cat(features, 1))
+            features.append(new_features)
+
+        out = torch.cat(features, 1)
+
+        # Apply CBAM if it exists
+        if self.cbam is not None:
+            out, channel_map, spatial_map = self.cbam(out)
+            return out, channel_map, spatial_map
+
+        # Fallback if CBAM is not set
+        return out, None, None
+
+
 class DenseNetCBAM(nn.Module):
     """
     DenseNet model with CBAM attention modules.
@@ -501,10 +526,10 @@ class DenseNetCBAM(nn.Module):
         self.backbone = nn.Module()
         self.attention_maps = {}
 
-        # First convolution
+        # First convolution - USE BATCHNORM instead of GroupNorm to match pretrained weights
         self.backbone.features = nn.Sequential(OrderedDict([
             ('conv0', nn.Conv2d(3, num_init_features, kernel_size=7, stride=2, padding=3, bias=False)),
-            ('norm0', nn.GroupNorm(min(32, num_init_features), num_init_features)),
+            ('norm0', nn.BatchNorm2d(num_init_features)),  # Changed from GroupNorm to BatchNorm2d
             ('relu0', nn.ReLU(inplace=True)),
             ('pool0', nn.MaxPool2d(kernel_size=3, stride=2, padding=1)),
         ]))
@@ -514,47 +539,90 @@ class DenseNetCBAM(nn.Module):
 
         # Create blocks and transitions
         for i, num_layers in enumerate(block_config):
-            # Add a dense block
-            setattr(self.backbone, f'denseblock{i + 1}',
-                    CBAMDenseBlock(
-                        num_layers=num_layers,
-                        num_input_features=num_features,
-                        bn_size=4,
-                        growth_rate=growth_rate,
-                        drop_rate=0
-                    ))
+            # Add a dense block with modified CBAMDenseBlock
+            block = self._create_dense_block(
+                num_layers=num_layers,
+                num_input_features=num_features,
+                bn_size=4,
+                growth_rate=growth_rate,
+                drop_rate=0
+            )
+            setattr(self.backbone, f'denseblock{i + 1}', block)
             num_features = num_features + num_layers * growth_rate
 
             # Add a transition layer, except after the last dense block
             if i != len(block_config) - 1:
-                setattr(self.backbone, f'transition{i + 1}',
-                        CBAMTransition(
-                            num_input_features=num_features,
-                            num_output_features=num_features // 2
-                        ))
+                trans = self._create_transition(
+                    num_input_features=num_features,
+                    num_output_features=num_features // 2
+                )
+                setattr(self.backbone, f'transition{i + 1}', trans)
                 num_features = num_features // 2
 
-        # Final batch normalization
-        self.backbone.features.add_module('norm5', nn.GroupNorm(min(32, num_features), num_features))
+        # Final batch normalization - use BatchNorm to match pretrained
+        self.backbone.features.add_module('norm5', nn.BatchNorm2d(num_features))
 
         # Linear layer
         self.backbone.classifier = nn.Linear(num_features, num_classes)
 
-        # Initialize weights from pretrained model
-        self._initialize_weights(base_model)
+        # Copy structure from base model and initialize weights
+        self._copy_weights_from_base_model(base_model)
 
-    def _initialize_weights(self, base_model):
-        """Initialize weights from pretrained model."""
-        # Try to copy weights for first convolution and classifier
-        # This is an approximation - full transfer of pretrained weights would need more work
-        own_state = self.backbone.state_dict()
-        base_state = base_model.state_dict()
+    def _create_dense_block(self, num_layers, num_input_features, bn_size, growth_rate, drop_rate):
+        """Create a dense block that's compatible with pretrained weights."""
+        layers = []
+        for i in range(num_layers):
+            # Use the base DenseLayer structure but add CBAM attention
+            input_features = num_input_features + i * growth_rate
+            layer = nn.Sequential(
+                nn.BatchNorm2d(input_features),
+                nn.ReLU(inplace=True),
+                nn.Conv2d(input_features, bn_size * growth_rate, kernel_size=1, stride=1, bias=False),
+                nn.BatchNorm2d(bn_size * growth_rate),
+                nn.ReLU(inplace=True),
+                nn.Conv2d(bn_size * growth_rate, growth_rate, kernel_size=3, stride=1, padding=1, bias=False)
+            )
+            layers.append(layer)
 
-        for name, param in base_state.items():
-            if 'conv0' in name and name in own_state and own_state[name].shape == param.shape:
-                own_state[name].copy_(param)
-            elif 'classifier' in name and name in own_state and own_state[name].shape == param.shape:
-                own_state[name].copy_(param)
+        # Create a sequential module
+        block = _CustomDenseBlock(layers)
+
+        # Add CBAM at the end
+        num_output_features = num_input_features + num_layers * growth_rate
+        block.cbam = CBAM(num_output_features)
+
+        return block
+
+    def _create_transition(self, num_input_features, num_output_features):
+        """Create a transition layer compatible with pretrained weights."""
+        return nn.Sequential(
+            nn.BatchNorm2d(num_input_features),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(num_input_features, num_output_features, kernel_size=1, stride=1, bias=False),
+            nn.AvgPool2d(kernel_size=2, stride=2)
+        )
+
+    def _copy_weights_from_base_model(self, base_model):
+        """Copy weights from pretrained model where possible."""
+        # Extract the state dictionary from the base model
+        base_dict = base_model.state_dict()
+
+        # Map base_model keys to our model keys
+        for key in base_dict:
+            if key.startswith('features.'):
+                # Try to find corresponding module in our backbone
+                new_key = key
+
+                # Only copy if shapes match
+                if new_key in self.backbone.state_dict() and \
+                        self.backbone.state_dict()[new_key].shape == base_dict[key].shape:
+                    self.backbone.state_dict()[new_key].copy_(base_dict[key])
+
+        # Copy classifier weights
+        if 'classifier.weight' in base_dict and 'classifier.weight' in self.backbone.state_dict():
+            if self.backbone.state_dict()['classifier.weight'].shape == base_dict['classifier.weight'].shape:
+                self.backbone.state_dict()['classifier.weight'].copy_(base_dict['classifier.weight'])
+                self.backbone.state_dict()['classifier.bias'].copy_(base_dict['classifier.bias'])
 
     def get_private_features(self):
         """
@@ -581,13 +649,13 @@ class DenseNetCBAM(nn.Module):
         self.attention_maps = {}
 
         # Initial features
-        x = self.backbone.features(x)
+        features = self.backbone.features[:4](x)  # Conv + BN + ReLU + MaxPool
 
         # Process dense blocks with CBAM
         for i in range(1, 5):  # DenseNet typically has 4 dense blocks
             if hasattr(self.backbone, f'denseblock{i}'):
                 denseblock = getattr(self.backbone, f'denseblock{i}')
-                x, channel_map, spatial_map = denseblock(x)
+                features, channel_map, spatial_map = denseblock(features)
 
                 # Store attention maps
                 self.attention_maps[f'denseblock{i}'] = (channel_map, spatial_map)
@@ -595,16 +663,15 @@ class DenseNetCBAM(nn.Module):
                 # Apply transition if not the last block
                 if i < 4 and hasattr(self.backbone, f'transition{i}'):
                     transition = getattr(self.backbone, f'transition{i}')
-                    x = transition(x)
+                    features = transition(features)
 
         # Final processing
-        x = F.relu(x, inplace=True)
-        x = F.adaptive_avg_pool2d(x, (1, 1))
-        x = torch.flatten(x, 1)
-        x = self.backbone.classifier(x)
+        features = F.relu(self.backbone.features[-1](features), inplace=True)  # Final norm
+        features = F.adaptive_avg_pool2d(features, (1, 1))
+        features = torch.flatten(features, 1)
+        x = self.backbone.classifier(features)
 
         return x
-
 
 class RetinopathyDataset(Dataset):
     """Dataset class for diabetic retinopathy images."""
@@ -2279,7 +2346,7 @@ def visualize_privacy_preservation_with_reconstruction(model, data_loader, devic
         optimizer = torch.optim.Adam([recon_img], lr=0.01)
 
         # Try to reconstruct the image that would produce this label
-        for iter in range(100):  # Limited iterations for demo
+        for iteration in range(10):  # Limited iterations for demo
             optimizer.zero_grad()
 
             # Get model output
@@ -2300,7 +2367,7 @@ def visualize_privacy_preservation_with_reconstruction(model, data_loader, devic
             optimizer.step()
 
             # Periodically clip to valid image range
-            if iter % 10 == 0:
+            if iteration % 10 == 0:
                 with torch.no_grad():
                     recon_img.data = torch.clamp(recon_img.data, -3, 3)
 

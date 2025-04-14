@@ -442,14 +442,14 @@ if __name__ == "__main__":
                         help='Proximal term weight for FedProx (only used when strategy is fedprox)')
     parser.add_argument('--feature_specific', type=bool, default=True,
                         help='Enable feature-specific privacy using attention mechanisms')
-    parser.add_argument('--model_type', type=str, default='resnet', choices=['resnet', 'densenet'],
+    parser.add_argument('--model_type', type=str, default='densenet', choices=['resnet', 'densenet'],
                         help='Model architecture type (resnet or densenet)')
-    parser.add_argument('--model_name', type=str, default='resnet18',
+    parser.add_argument('--model_name', type=str, default='densenet121',
                         choices=['resnet18', 'resnet34', 'resnet50', 'densenet121', 'densenet169', 'densenet201'],
                         help='Specific model name within the architecture type')
     parser.add_argument('--img_dir', type=str, default='E:/IRP_dataset_new/IRP_Final_Images',
                         help='Directory containing the retinopathy images')
-    parser.add_argument('--labels_path', type=str, default='FL_LABELS_PATH", "E:/IRP_dataset_new/IRP_Final_Labels.csv',
+    parser.add_argument('--labels_path', type=str, default='E:/IRP_dataset_new/IRP_Final_Labels.csv',
                         help='Path to CSV file with image labels')
     args = parser.parse_args()
 
