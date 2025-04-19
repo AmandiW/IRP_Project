@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-This repository implements a novel approach to privacy-preserving federated learning for diabetic retinopathy diagnosis. The system incorporates feature-specific differential privacy using attention mechanisms (CBAM) to enhance the privacy-utility tradeoff in medical image analysis.
+This repository implements a novel approach to Privacy-Preserving Federated Learning for Diabetic Retinopathy diagnosis. The system incorporates Feature-Specific Differential Privacy (FS-DP) using Attention Mechanisms to enhance the privacy-utility tradeoff in medical image analysis.
 
 ## Key Features
 
