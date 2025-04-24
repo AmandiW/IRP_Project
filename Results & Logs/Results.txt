@@ -1,0 +1,6 @@
+Note on Experimental Results and Visualizations
+
+Due to the large size of the federated learning logs, visualizations, and results generated from multiple experiments, these files have not been included in this Git repository.
+Instead, all experimental results and supporting materials are stored in a separate Google Drive folder.
+
+You can find the link to access this folder in the Appendix section of my thesis.
