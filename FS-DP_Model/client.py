@@ -1,7 +1,6 @@
 import flwr as fl
 import torch
 import logging
-import numpy as np
 import os
 from collections import OrderedDict
 from utils import (
