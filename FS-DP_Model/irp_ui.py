@@ -1,10 +1,7 @@
 import streamlit as st
 import os
-import time
 import subprocess
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 import glob
 import sys
 from PIL import Image
@@ -12,7 +9,6 @@ from pathlib import Path
 
 st.set_page_config(
     page_title="Federated Learning with Differential Privacy",
-    page_icon="🔒",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -188,7 +184,8 @@ with tab1:
         st.session_state.feature_specific = st.toggle(
             "Enable Feature-Specific Privacy",
             value=True,
-            help="Use attention mechanisms to apply different amounts of noise to different features based on importance"
+            help="Use attention mechanisms to apply different amounts of noise to different features based on "
+                 "importance"
         )
 
         st.markdown("<div class='subsection-header'>Model Parameters</div>", unsafe_allow_html=True)
@@ -234,9 +231,9 @@ with tab1:
         code_dir_valid = os.path.exists(os.path.join(st.session_state.code_directory, "main.py"))
 
         if code_dir_valid:
-            st.success("✅ main.py found in specified directory")
+            st.success("main.py found in specified directory")
         else:
-            st.error("❌ main.py not found in specified directory")
+            st.error("main.py not found in specified directory")
 
     # Data paths
     col1, col2 = st.columns(2)
