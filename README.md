@@ -20,9 +20,9 @@ This repository implements a novel approach to Privacy-Preserving Federated Lear
 
 ## Feature-Specific DP Implementation Files
 
-- IRP_Data/client.py: Implements the federated learning client with our novel feature-specific DP mechanism that calibrates noise based on attention-derived feature importance scores.
-- IRP_Data/main.py: Coordinates the federated learning process with feature-specific privacy, tracking both utility metrics and privacy budget consumption.
-- IRP_Data/server.py: Server implementation that aggregates models while preserving feature-specific privacy guarantees and calculating global privacy metrics.
-- IRP_Data/utils.py: Core utility functions including CBAM attention modules, feature sensitivity calculation algorithms, privacy accounting, and specialized analysis tools for evaluating the privacy-utility tradeoff.
-- IRP_Data/irp_ui.py: User-Interface that provides a comprehensive graphical environment for configuring and running Feature-Specific DP experiments.
+- FS-DP_Model/client.py: Implements the federated learning client with our novel feature-specific DP mechanism that calibrates noise based on attention-derived feature importance scores.
+- FS-DP_Model/main.py: Coordinates the federated learning process with feature-specific privacy, tracking both utility metrics and privacy budget consumption.
+- FS-DP_Model/server.py: Server implementation that aggregates models while preserving feature-specific privacy guarantees and calculating global privacy metrics.
+- FS-DP_Model/utils.py: Core utility functions including CBAM attention modules, feature sensitivity calculation algorithms, privacy accounting, and specialized analysis tools for evaluating the privacy-utility tradeoff.
+- FS-DP_Model/irp_ui.py: User-Interface that provides a comprehensive graphical environment for configuring and running Feature-Specific DP experiments.
 
